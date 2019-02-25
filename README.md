@@ -9,7 +9,7 @@ This uses the [Ionic](https://ionicframework.com/docs/intro) Framework component
 Install or rebuild last component to Node, IONIC and Cordova
 ```
 $ npm install -g npm
-$ npm install g ionic cordova
+$ npm install -g ionic cordova
 ```
  
 You can verify your installation with the command.
