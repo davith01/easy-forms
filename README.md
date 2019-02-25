@@ -55,7 +55,8 @@ $ ionic cordova build android
 
 **Test app in simulator devices**
 
-Downdolad Genymotion [https://www.genymotion.com] (https://www.genymotion.com). User account is required for test!.
+Downdolad Genymotion [https://www.genymotion.com](https://www.genymotion.com). User account is required for test!.
+
 
 Add new AVD Android Virtual Device > version 22
 
