@@ -53,10 +53,12 @@ Build platform android.
 $ ionic cordova build android
 ```
 
-** Test app in simulator devices **
+**Test app in simulator devices**
 
 Downdolad Genymotion [https://www.genymotion.com] (https://www.genymotion.com). User account is required for test!.
+
 Add new AVD Android Virtual Device > version 22
+
 Run AVD
 
 
@@ -66,11 +68,10 @@ For testing the app with the devices AVD running in Genymotion.
 $ ionic run android --device
 ```
 
-
-
-## Script included
+## Plugins included 
  
  - cordova-sqlite-storage
  - cordova-plugin-fingerprint-aio
  - angular2-signaturepad
+ 
  
