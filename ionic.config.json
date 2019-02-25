@@ -1,0 +1,7 @@
+{
+  "name": "easy-forms",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
