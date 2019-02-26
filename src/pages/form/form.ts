@@ -25,10 +25,10 @@ export class FormPage {
   emailMask = emailMask;
   countries: Array<Country>;
   genders: Array<string>;
-  
-  signatureImage : any;
 
-  constructor(public navCtrl: NavController, public navParams:NavParams, public formBuilder: FormBuilder, public modal: ModalController) {
+  signatureImage: any;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public modal: ModalController) {
   }
 
   ionViewWillLoad() {
@@ -123,14 +123,14 @@ export class FormPage {
     ],
   };
 
-  onSubmit(values){
+  onSubmit(values) {
     //this.navCtrl.push(UserPage);
   }
-  
+
   openSignatureModel() {
-	  
+
     let modal = this.modal.create(ContactPage);
-	
+
     modal.present();
     modal.onDidDismiss((data: any) => {
       if (data) {
@@ -140,7 +140,7 @@ export class FormPage {
   }
 
   doChangeSignature(data) {
-	  this.signatureImage = data;
+    this.signatureImage = data;
   };
 
 }

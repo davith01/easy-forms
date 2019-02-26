@@ -10,20 +10,20 @@ export enum ConnectionStatusEnum {
 @Injectable()
 export class NetworkProvider {
 
-  previousStatus;
+    previousStatus;
 
-  constructor(public alertCtrl: AlertController, 
-              //public network: Network,
-              public eventCtrl: Events) {
+    constructor(public alertCtrl: AlertController,
+        //public network: Network,
+        public eventCtrl: Events) {
 
-    console.log('Hello NetworkProvider Provider');
+        console.log('Hello NetworkProvider Provider');
 
-    this.previousStatus = ConnectionStatusEnum.Online;
-    
-  }
+        this.previousStatus = ConnectionStatusEnum.Online;
+
+    }
 
     public initializeNetworkEvents(): void {
-		
+
         /*this.network.onDisconnect().subscribe(() => {
             if (this.previousStatus === ConnectionStatusEnum.Online) {
                 this.eventCtrl.publish('network:offline');

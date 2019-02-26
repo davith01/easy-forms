@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>history</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+
+  
+<ion-card *ngFor="let header of dataHeaders">  
+  <ion-list>
+  <ion-item><ion-label>Orden</ion-label>
+			<ion-input value="Readonly" readonly [(ngModel)]="header.orderId"></ion-input>
+			</ion-item>
+  <ion-item><ion-label>Cliente</ion-label>
+		<ion-input value="Readonly" readonly [(ngModel)]="header.clientName"></ion-input>
+		</ion-item>
+  
+  <ion-item>
+		<ion-label>Local</ion-label>
+		<ion-input value="Readonly" readonly [(ngModel)]="header.local"></ion-input>
+  </ion-item>
+  <ion-item>
+	    <ion-label>Ciudad</ion-label>
+		<ion-input value="Readonly" readonly [(ngModel)]="header.city"></ion-input>
+  </ion-item>
+  <ion-item>
+        <ion-label>Fecha</ion-label>
+		<ion-input value="Readonly" readonly [(ngModel)]="header.date"></ion-input>
+</ion-item>
+  
+</ion-list>
+</ion-card>
+ 
+
+</ion-content>
+

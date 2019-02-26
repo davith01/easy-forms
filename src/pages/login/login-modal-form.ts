@@ -1,4 +1,10 @@
-<ion-content padding>
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ViewController } from 'ionic-angular';
+
+@Component({
+	template: `
+  <ion-content padding>
 
     <form (ngSubmit)="loginComplete()">
 		<ion-list>
@@ -20,3 +26,25 @@
 	</form>
   
 </ion-content>
+
+  `,
+})
+export class LoginModalForm {
+
+	loginEmail: string;
+	loginPassword: string;
+
+	constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams) {
+
+	}
+
+	loginComplete() {
+		let data = { loginEmail: this.loginEmail, loginPassword: this.loginPassword };
+		this.viewCtrl.dismiss(data);
+	}
+
+	closeModal() {
+		this.navCtrl.pop();
+	}
+
+}

@@ -11,6 +11,7 @@ export class TabsPage {
   appRoot: any = 'HomePage';
   formRoot: any = 'FormPage';
   drawRoot: any = 'DrawpadPage';
+  historyRoot: any = 'HistoryPage';
 
   myIndex: number;
  

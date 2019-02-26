@@ -134,6 +134,25 @@
 		<button ion-button full (click)="openSignatureModel()"> Open Signature </button>
 		<div><img [src]="signatureImage" *ngIf="signatureImage" /></div>
 	</ion-item>
+
 	<button ion-button full type="submit" [disabled]="!validations_form.valid">Submit</button>
+	
+	  <p>
+		<button ion-button icon-start>
+		  <ion-icon name='home'></ion-icon>
+		  Home
+		</button>
+		<button ion-button outline icon-start>
+		  <ion-icon name='briefcase' is-active="false"></ion-icon>
+		  Work
+		</button>
+		<button ion-button clear icon-start>
+		  <ion-icon name='beer' is-active="false"></ion-icon>
+		  Pub
+		</button>
+	  </p>
+
+
+	
   </form>
 </ion-content>

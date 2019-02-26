@@ -10,4 +10,4 @@ import { FormPage } from './form';
     IonicPageModule.forChild(FormPage),
   ],
 })
-export class FormPageModule {}
+export class FormPageModule { }

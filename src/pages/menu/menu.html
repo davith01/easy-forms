@@ -4,30 +4,31 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
- 
+
   <ion-content>
     <ion-list>
       <button ion-item menuClose *ngFor="let p of pages" (click)="openPage(p)">
-          <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{ p.title }}
+        <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
+        {{ p.title }}
       </button>
     </ion-list>
+    
+	<ion-list *ngIf="showFingerPrint" >
+      <button ion-item full (click)="removeFingerPrint()" [disabled]="disableFingerPrint">
+        <ion-icon item-start name="finger-print"></ion-icon>
+        Remove FingerPrint
+      </button>
+    </ion-list>
+	
 	<ion-list>
       <button ion-item full (click)="logOut()">
-          <ion-icon item-start name="exit" ></ion-icon>
-          Log out
+        <ion-icon item-start name="exit"></ion-icon>
+        Log out
       </button>
-	</ion-list>  
-	
-	<ion-list>
-      <button ion-item full (click)="removeFingerPrint()">
-          <ion-icon item-start name="finger-print" ></ion-icon>
-          Remove FingerPrint
-      </button>
-	</ion-list>
-	
+    </ion-list>
+
   </ion-content>
 </ion-menu>
- 
+
 <!-- main navigation -->
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
