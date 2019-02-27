@@ -8,13 +8,16 @@ export class LocalStorageProvider {
 	public usersAuthentication = [];
 
 	constructor(private storage: Storage) {
-
+	}
+	
+	/* UserAuthentication Storage */
+	
+	loadUserAuthentication() {
 		this.storage.get('user-auth').then((result) => {
 			if (result) {
 				this.usersAuthentication = result;
 			}
 		});
-
 	}
 
 	addUserAuthentication(dataAuth) {
@@ -23,18 +26,25 @@ export class LocalStorageProvider {
 	}
 
 	getUsersAuthentication(dataAuth) {
+		
+		//Filter user storage list 
 		let userAuthList = this.usersAuthentication.filter((userAuth) => {
 			if (userAuth.email === dataAuth.email && userAuth.password === dataAuth.password) {
 				return true;
 			}
 			return false;
 		});
+		
+		//Return user authentication if exist
 		if (userAuthList) {
 			return userAuthList[0];
 		}
 		else return false;
 	}
 
+	
+	/* FingerPrint Storage */
+	
 	getFingerPrint() {
 		return this.storage.get('fingerPrint-auth');
 	}

@@ -11,7 +11,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 //---Modals and pages
 import { MyApp } from './app.component';
-import { ContactPage } from '../pages/contact/contact';
+import { DrawpadPage } from '../pages/drawpad/drawpad';
 import { LoginModalForm } from '../pages/login/login-modal-form';
 
 //--- providers
@@ -23,7 +23,7 @@ import { NetworkProvider } from '../providers/network/network';
   declarations: [
     MyApp,
     LoginModalForm,
-    ContactPage
+    DrawpadPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +36,7 @@ import { NetworkProvider } from '../providers/network/network';
   entryComponents: [
     MyApp,
     LoginModalForm,
-    ContactPage
+    DrawpadPage
   ],
   providers: [
     StatusBar,

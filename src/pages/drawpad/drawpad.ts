@@ -1,59 +1,48 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
-import { ToastController} from 'ionic-angular';
+import { Component,ViewChild } from '@angular/core';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { NavController, ViewController } from 'ionic-angular';
 
-@IonicPage()
 @Component({
-  selector: 'page-home',
-  templateUrl: 'drawpad.html',
+  selector: 'page-drawpad',
+  templateUrl: 'drawpad.html'
 })
 export class DrawpadPage {
-  
-  signature: any='';
-  isDrawing = false;
-  constructor(public navController: NavController, public storage: Storage, public toastCtrl: ToastController) {}
- 
-  @ViewChild(SignaturePad) signaturePad: SignaturePad;
-  private signaturePadOptions: Object = { // Check out https://github.com/szimek/signature_pad
+
+@ViewChild(SignaturePad) public signaturePad : SignaturePad;
+
+  public signaturePadOptions : Object = {
     'minWidth': 2,
-    'canvasWidth': 400,
-    'canvasHeight': 200,
-    'backgroundColor': '#f6fbff',
-    'penColor': '#666a73'
+    'canvasWidth': 340,
+    'canvasHeight': 200
   };
- 
- 
-  ionViewDidEnter() {
-    this.signaturePad.clear()
-    this.storage.get('savedSignature').then((data) => {
-      this.signature = data;
-    });
+  public signatureImage : string;
+  
+  constructor(public navCtrl: NavController, public viewCtrl : ViewController) { }
+
+  closeModal(){
+    this.navCtrl.pop();
   }
- 
+
   drawComplete() {
-    this.isDrawing = false;
+    this.signatureImage = this.signaturePad.toDataURL();
+    let data  = {signatureImage: this.signatureImage};
+	this.viewCtrl.dismiss(data);
   }
- 
-  drawStart() {
-    this.isDrawing = true;
-  }
- 
-  savePad() {
-    this.signature = this.signaturePad.toDataURL();
-    this.storage.set('savedSignature', this.signature);
-    this.signaturePad.clear();
-    let toast = this.toastCtrl.create({
-      message: 'New Signature saved.',
-      duration: 3000
-    });
-    toast.present();
-  }
- 
-  clearPad() {
+
+  drawClear() {
     this.signaturePad.clear();
   }
   
+  canvasResize() {
+    let canvas = document.querySelector('canvas');
+    this.signaturePad.set('minWidth', 1);
+    this.signaturePad.set('canvasWidth', canvas.offsetWidth);
+    this.signaturePad.set('canvasHeight', canvas.offsetHeight);
+  }
+
+  ngAfterViewInit() {
+	this.signaturePad.clear();
+	this.canvasResize();
+  }
 
 }

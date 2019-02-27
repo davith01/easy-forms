@@ -1,15 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { UsernameValidator } from '../../validators/username.validator';
-import { PasswordValidator } from '../../validators/password.validator';
-import { PhoneValidator } from '../../validators/phone.validator';
-import { Country } from './form.model';
-import emailMask from 'text-mask-addons/dist/emailMask';
-
-
-import { ContactPage } from '../contact/contact';
-
 
 @IonicPage()
 @Component({
@@ -19,79 +10,39 @@ import { ContactPage } from '../contact/contact';
 
 export class FormPage {
 
+  dataItem: any = {};
+  dataList: any = [];
+  
   validations_form: FormGroup;
-  matching_passwords_group: FormGroup;
-  country_phone_group: FormGroup;
-  emailMask = emailMask;
-  countries: Array<Country>;
-  genders: Array<string>;
-
-  signatureImage: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public modal: ModalController) {
+	  let data = this.navParams.get('item');
+	  this.dataItem = data || {};
+	  
+	  this.validations_form = this.formBuilder.group({
+		idAnimal: new FormControl('', Validators.required),
+		chapeta: new FormControl('', Validators.compose([
+			Validators.required,
+			Validators.maxLength(25),
+			Validators.minLength(5)
+		])),
+		diagnostico: new FormControl('', Validators.required),
+		apta: new FormControl(true, Validators.pattern('true')),
+		sincronizada: new FormControl(true, Validators.pattern('true'))
+	});
   }
 
-  ionViewWillLoad() {
-    this.countries = [
-      new Country('UY', 'Uruguay'),
-      new Country('US', 'United States'),
-      new Country('AR', 'Argentina')
-    ];
-
-    this.genders = [
-      "Male",
-      "Female"
-    ];
-
-    this.matching_passwords_group = new FormGroup({
-      password: new FormControl('', Validators.compose([
-        Validators.minLength(5),
-        Validators.required,
-        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$')
-      ])),
-      confirm_password: new FormControl('', Validators.required)
-    }, (formGroup: FormGroup) => {
-      return PasswordValidator.areEqual(formGroup);
-    });
-
-    let country = new FormControl(this.countries[0], Validators.required);
-    let phone = new FormControl('', Validators.compose([
-      Validators.required,
-      PhoneValidator.validCountryPhone(country)
-    ]));
-    this.country_phone_group = new FormGroup({
-      country: country,
-      phone: phone
-    });
-
-    this.validations_form = this.formBuilder.group({
-      username: new FormControl('', Validators.compose([
-        UsernameValidator.validUsername,
-        Validators.maxLength(25),
-        Validators.minLength(5),
-        Validators.pattern('^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$'),
-        Validators.required
-      ])),
-      name: new FormControl('', Validators.required),
-      lastname: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-      ])),
-      gender: new FormControl(this.genders[0], Validators.required),
-      country_phone: this.country_phone_group,
-      matching_passwords: this.matching_passwords_group,
-      terms: new FormControl(true, Validators.pattern('true'))
-    });
-  }
+  
+  
 
   validation_messages = {
-    'username': [
-      { type: 'required', message: 'Username is required.' },
-      { type: 'minlength', message: 'Username must be at least 5 characters long.' },
-      { type: 'maxlength', message: 'Username cannot be more than 25 characters long.' },
-      { type: 'pattern', message: 'Your username must contain only numbers and letters.' },
-      { type: 'validUsername', message: 'Your username has already been taken.' }
+	'idAnimal': [
+	  { type: 'required', message: 'Código requerido.' }
+	],
+    'chapeta': [
+      { type: 'required', message: 'chapeta is required.' },
+      { type: 'minlength', message: 'chapeta must be at least 5 characters long.' },
+      { type: 'maxlength', message: 'chapeta cannot be more than 25 characters long.' }
     ],
     'name': [
       { type: 'required', message: 'Name is required.' }
@@ -123,24 +74,12 @@ export class FormPage {
     ],
   };
 
-  onSubmit(values) {
-    //this.navCtrl.push(UserPage);
+  onSubmit(exit: boolean) {
+	  this.dataList.push(this.dataItem);
+	  this.dataItem.idAnimal = '';
+	  //if(exit) this.navCtrl.push('OrderPage',this.dataList);
+	   if(exit) this.navCtrl.push('OrderPage',{"order":{},"itemList":this.dataList});
+	   
   }
-
-  openSignatureModel() {
-
-    let modal = this.modal.create(ContactPage);
-
-    modal.present();
-    modal.onDidDismiss((data: any) => {
-      if (data) {
-        this.doChangeSignature(data.signatureImage);
-      }
-    });
-  }
-
-  doChangeSignature(data) {
-    this.signatureImage = data;
-  };
-
+ 
 }

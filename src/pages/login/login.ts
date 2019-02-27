@@ -37,6 +37,9 @@ export class LoginPage {
 			this.showToast(err);
 			this.showFingerPrint = false;
 		});
+		
+		//Inizialize the local storage for user authentication
+		this.localStorage.loadUserAuthentication();
 	}
 
 	goToHome(type, data) {

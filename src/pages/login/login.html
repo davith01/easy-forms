@@ -16,7 +16,7 @@
 		</button>
 		<div class="spacer" style="height:40px;" id="login-spacer3"></div>
 	</form>
-	<button *ngIf="showFingerPrint" id="login-finger" ion-button round full outline block color="positive" on-click="startFingerPrint()">
+	<button *ngIf="showFingerPrint" id="login-finger" ion-button round full outline block color="positive" (click)="startFingerPrint()">
 		Or start with FingerPrint&nbsp;
 		<ion-icon name="finger-print" class="finger-print"></ion-icon>
 	</button>
