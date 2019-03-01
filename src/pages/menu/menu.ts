@@ -36,10 +36,9 @@ export class MenuPage {
     public localStorage: LocalStorageProvider,
     public toastCtrl: ToastController) {
 		
-		this.localStorage.getFingerPrint().then((result) => {
-			if (result) {
-				this.showFingerPrint = true;
-			}
+		//retrive finger print authentication data
+		this.localStorage.getFingerPrintAuth().then((result) => {
+			this.showFingerPrint = result ?  true : false;
 		});
   }
 
@@ -84,7 +83,7 @@ export class MenuPage {
   }
 
   removeFingerPrint() {
-    this.localStorage.removeFingerPrint();
+    this.localStorage.removeFingerPrintAuth();
 	this.disableFingerPrint = true;
     this.showToast('FingerPrint removed !!');
   }

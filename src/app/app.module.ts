@@ -17,7 +17,7 @@ import { LoginModalForm } from '../pages/login/login-modal-form';
 //--- providers
 import { LocalStorageProvider } from '../providers/local-storage/local-storage';
 import { RestProvider } from '../providers/rest/rest';
-import { NetworkProvider } from '../providers/network/network';
+import { NetworkNotificationProvider } from '../providers/network-notification/network-notification';
 
 @NgModule({
   declarations: [
@@ -45,7 +45,7 @@ import { NetworkProvider } from '../providers/network/network';
     LocalStorageProvider,
     RestProvider,
     FingerprintAIO,
-    NetworkProvider
+    NetworkNotificationProvider
   ]
 })
 export class AppModule { }

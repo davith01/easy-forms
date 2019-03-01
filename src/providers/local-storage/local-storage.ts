@@ -4,57 +4,55 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class LocalStorageProvider {
 
-
-	public usersAuthentication = [];
-
 	constructor(private storage: Storage) {
+		
 	}
 	
-	/* UserAuthentication Storage */
-	
-	loadUserAuthentication() {
+	getUserAuth() {
+		return this.storage.get('user-auth');
+	}
+
+	setUserAuth(userAuth) {
 		this.storage.get('user-auth').then((result) => {
-			if (result) {
-				this.usersAuthentication = result;
+			if(result) {
+				result.filter((dataAuth) => {
+					return userAuth.loginEmail !== dataAuth.loginEmail;
+				});
+				result.push(userAuth);
 			}
+			else { 
+				result = [];
+				result.push(userAuth);
+			}
+			this.storage.set('users-auth', result);
 		});
 	}
 
-	addUserAuthentication(dataAuth) {
-		this.usersAuthentication.push(dataAuth);
-		this.storage.set('users-auth', this.usersAuthentication);
-	}
-
-	getUsersAuthentication(dataAuth) {
+	//return true if user auth data match in the user auth list
+	isUserAuth(userAuth,retrive) {
 		
-		//Filter user storage list 
-		let userAuthList = this.usersAuthentication.filter((userAuth) => {
-			if (userAuth.email === dataAuth.email && userAuth.password === dataAuth.password) {
-				return true;
-			}
-			return false;
+		this.storage.get('user-auth').then((result) => {
+			result = result || [];
+			let userAuthList = result.filter((dataAuth) => {
+				return userAuth.loginEmail === dataAuth.loginEmail && userAuth.loginPassword === dataAuth.loginPassword;
+			});
+			//Return user authentication data if exists
+			retrive(userAuthList[0] ? userAuthList[0] : false);
 		});
-		
-		//Return user authentication if exist
-		if (userAuthList) {
-			return userAuthList[0];
-		}
-		else return false;
 	}
 
+	/* FingerPrintAuth Storage */
 	
-	/* FingerPrint Storage */
+	getFingerPrintAuth() {
+		return this.storage.get('finger-print-auth');
+	}
+
+	setFingerPrintAuth(fingerPrintAuth) {
+		this.storage.set('finger-print-auth', fingerPrintAuth);
+	}
 	
-	getFingerPrint() {
-		return this.storage.get('fingerPrint-auth');
+	removeFingerPrintAuth() {
+		this.storage.remove('finger-print-auth');
 	}
-
-	setFingerPrint(fingerPrintAuth) {
-		this.storage.set('fingerPrint-auth', fingerPrintAuth);
-	}
-
-	removeFingerPrint() {
-		return this.storage.remove('fingerPrint-auth');
-	}
-
+	
 }

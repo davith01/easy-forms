@@ -2,17 +2,22 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { LoadingController, ToastController } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
+import { NetworkNotificationProvider } from '../../providers/network-notification/network-notification';
 import { RestProvider } from '../../providers/rest/rest';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
 import { ViewController } from 'ionic-angular';
 import { LoginModalForm } from './login-modal-form';
 
-
 export interface ResponseRestInterface {
 	accessToken: string;
-	data?: any;
+	userAuth?: any;
 	message?: string;
 	error?: any;
+}
+
+export interface RequestRestInterface {
+	loginEmail: string;
+	loginPassword: string;
 }
 
 @IonicPage()
@@ -25,12 +30,15 @@ export class LoginPage {
 	loginEmail: string;
 	loginPassword: string;
 	showFingerPrint =  false;
+	message: string;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams,
-		public faio: FingerprintAIO, public modalCtrl: ModalController,
-		public localStorage: LocalStorageProvider, public restProvider: RestProvider,
-		public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+				public faio: FingerprintAIO, public modalCtrl: ModalController,
+				public localStorage: LocalStorageProvider, public restProvider: RestProvider,
+				public toastCtrl: ToastController, public loadingCtrl: LoadingController,
+				public networkNotification: NetworkNotificationProvider) {
 
+		//Inizialize the FingerPrint control
 		this.faio.isAvailable().then(result => {
 			this.showFingerPrint = true;
 		}).catch(err => {
@@ -38,54 +46,65 @@ export class LoginPage {
 			this.showFingerPrint = false;
 		});
 		
-		//Inizialize the local storage for user authentication
-		this.localStorage.loadUserAuthentication();
+		//Inizialize the Network notification control
+		this.networkNotification.initializeNetworkEvents(function(data){
+			this.message = data;
+		},function(data){
+			this.message = data;
+		});
+		
 	}
-
-	goToHome(type, data) {
-
-		if (type === 'Login') {
-			data = { 'email': this.loginEmail, 'password': this.loginPassword };
-		}
-		else if (type === 'FingerPrint') {
-			data = { 'email': data.loginEmail, 'password': data.loginPassword };
-		}
+	
+	
+	goToHome() {
+		//continue with access to the app
+		this.navCtrl.setRoot('MenuPage');
+	}
+	
+	validateUserAuthentication(type: string, data: RequestRestInterface) {
 
 		let loading = this.loadingCtrl.create({
 			content: 'Please wait...'
 		});
 
 		loading.present().then(() => { //start the loading component
-			//invoke rest
-			this.restProvider.getAuthSession(data).then((result: ResponseRestInterface) => {
+		
+			let userAuth = { 'loginEmail': data.loginEmail, 'loginPassword': data.loginPassword };
+		
+			//invoke rest api authentication
+			this.restProvider.getAuthSession(userAuth).then((result: ResponseRestInterface) => {
 
-				loading.dismiss(); //stop the loading component
-
-				if (result.accessToken) {
+				//stop the loading component
+				loading.dismiss(); 
+				
+				if (result.accessToken) { 
 
 					//if session is ok, save to localstorage
-					this.localStorage.addUserAuthentication(data);
+					this.localStorage.setUserAuth(userAuth);
 
 					//save the fingerprint autentication
 					if (type === 'FingerPrint') {
-						this.localStorage.setFingerPrint(data);
+						this.localStorage.setFingerPrintAuth(userAuth);
 					}
 
-					//continue with app
-					this.navCtrl.setRoot('MenuPage');
+					this.goToHome();
 
 				}
-				else if (result.error) { // if network doesn't work
+				else if (result.error) { 
+					// TODO: if network doesn't work
+					
 
-					let userAuth = this.localStorage.getUsersAuthentication(data);
-					if (userAuth) {
-						//continue with app
-						this.navCtrl.setRoot('MenuPage');
-					}
-					else {
-						let messageErr = 'Can\'t get user session';
-						this.showToast(messageErr);
-					}
+					// validate user authentication cache
+					this.localStorage.isUserAuth(userAuth,function(isValid){
+						if (isValid) {
+							//continue with access to the app
+							this.navCtrl.setRoot('MenuPage');
+						}
+						else {
+							let messageErr = 'Can\'t get user session';
+							this.showToast(messageErr);
+						}	
+					});
 				}
 
 			});
@@ -95,16 +114,20 @@ export class LoginPage {
 
 
 	loginFingerPrint() {
-		this.localStorage.getFingerPrint().then((result) => {
+		
+		//Retrive finger print authentication
+		this.localStorage.getFingerPrintAuth().then((result) => {
+			
 			if (result) {
-				this.goToHome('FingerPrint', result);
+				this.validateUserAuthentication('FingerPrint', result);
 			} else {
 
+				//show modal to request data
 				let modal = this.modalCtrl.create(LoginModalForm);
 				modal.present();
-				modal.onDidDismiss((data: any) => {
-					if (data) {
-						this.goToHome('FingerPrint', data);
+				modal.onDidDismiss((userAuth: any) => {
+					if (userAuth) {
+						this.validateUserAuthentication('FingerPrint', userAuth);
 					}
 				});
 			}
@@ -135,5 +158,14 @@ export class LoginPage {
 			position: 'top'
 		});
 		toast.present(toast);
+	}
+	
+	storageUsers: string;
+	
+	getUserAuth() {
+		this.localStorage.getUserAuth().then((result) => {
+			this.storageUsers = JSON.stringify(result);
+		});
+		
 	}
 }
