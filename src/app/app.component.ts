@@ -11,8 +11,8 @@ export class MyApp {
 
 	rootPage: any = 'LoginPage';
 
-	constructor(
-		public platform: Platform, public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+	constructor(public platform: Platform, public events: Events,
+				public statusBar: StatusBar, public splashScreen: SplashScreen) {
 		
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
@@ -20,6 +20,7 @@ export class MyApp {
 
 			statusBar.styleDefault();
 			splashScreen.hide();
+			
 		});
 	}
 }

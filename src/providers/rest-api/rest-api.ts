@@ -6,15 +6,14 @@ import { Injectable } from '@angular/core';
 import { LoadingController, ToastController } from 'ionic-angular';
 
 @Injectable()
-export class RestProvider {
+export class RestApiProvider {
 
-	//apiUrl = 'http://192.168.0.20:3636/rest'; --MyIP for wifi
 	apiUrl = 'http://www.mocky.io/v2';
-
+	
 	constructor(public http: HttpClient, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
 
 	}
-
+	
 	httpAuth(url, data) {
 
 		let sendHttp: any;
@@ -41,9 +40,14 @@ export class RestProvider {
 	}
 
 	getAuthSession(data) {
-		//let url = this.apiUrl + '/Login/';
 		let url = this.apiUrl+'/5c7428a32f000036009640ca/';
 		return this.httpAuth(url, data);
 	}
-
+	
+	getOrders(data) {
+		let url = this.apiUrl+'/5c7428a32f000036009640ca/';
+		return this.httpAuth(url, data);
+	}
+	
+	
 }

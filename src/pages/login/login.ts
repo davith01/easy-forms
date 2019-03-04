@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { LoadingController, ToastController } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-import { NetworkNotificationProvider } from '../../providers/network-notification/network-notification';
-import { RestProvider } from '../../providers/rest/rest';
+//import { NetworkNotifyProvider } from '../../providers/network-notify/network-notify';
+import { RestApiProvider } from '../../providers/rest-api/rest-api';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
-import { ViewController } from 'ionic-angular';
 import { LoginModalForm } from './login-modal-form';
+import { NetworkNotifyComponent } from '../../components/network-notify/network-notify';
 
 export interface ResponseRestInterface {
 	accessToken: string;
@@ -30,15 +30,16 @@ export class LoginPage {
 	loginEmail: string;
 	loginPassword: string;
 	showFingerPrint =  false;
-	message: string;
+	networkMessage: string;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams,
 				public faio: FingerprintAIO, public modalCtrl: ModalController,
-				public localStorage: LocalStorageProvider, public restProvider: RestProvider,
+			//	public networkNotify: NetworkNotifyProvider,
+				public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
 				public toastCtrl: ToastController, public loadingCtrl: LoadingController,
-				public networkNotification: NetworkNotificationProvider) {
+				public networkNotify: NetworkNotifyComponent) {
 
-		//Inizialize the FingerPrint control
+		//initialize the FingerPrint control
 		this.faio.isAvailable().then(result => {
 			this.showFingerPrint = true;
 		}).catch(err => {
@@ -46,13 +47,16 @@ export class LoginPage {
 			this.showFingerPrint = false;
 		});
 		
-		//Inizialize the Network notification control
-		this.networkNotification.initializeNetworkEvents(function(data){
-			this.message = data;
-		},function(data){
-			this.message = data;
-		});
+		let _self = this;
 		
+		/** /
+		//Initialize the Network notification control
+		this.networkNotify.networkStatus(function(data){
+			_self.networkMessage = JSON.stringify(data);
+		},function(data){
+			_self.networkMessage = JSON.stringify(data);
+		});	
+		/**/
 	}
 	
 	
@@ -72,7 +76,7 @@ export class LoginPage {
 			let userAuth = { 'loginEmail': data.loginEmail, 'loginPassword': data.loginPassword };
 		
 			//invoke rest api authentication
-			this.restProvider.getAuthSession(userAuth).then((result: ResponseRestInterface) => {
+			this.restApi.getAuthSession(userAuth).then((result: ResponseRestInterface) => {
 
 				//stop the loading component
 				loading.dismiss(); 
@@ -93,16 +97,16 @@ export class LoginPage {
 				else if (result.error) { 
 					// TODO: if network doesn't work
 					
-
+					let _self = this;
 					// validate user authentication cache
 					this.localStorage.isUserAuth(userAuth,function(isValid){
 						if (isValid) {
 							//continue with access to the app
-							this.navCtrl.setRoot('MenuPage');
+							_self.navCtrl.setRoot('MenuPage');
 						}
 						else {
 							let messageErr = 'Can\'t get user session';
-							this.showToast(messageErr);
+							_self.showToast(messageErr);
 						}	
 					});
 				}
@@ -164,7 +168,7 @@ export class LoginPage {
 	
 	getUserAuth() {
 		this.localStorage.getUserAuth().then((result) => {
-			this.storageUsers = JSON.stringify(result);
+			this.storageUsers = JSON.stringify(result||[]);
 		});
 		
 	}

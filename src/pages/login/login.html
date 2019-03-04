@@ -1,7 +1,13 @@
 <ion-content padding id="page5">
-	<div class="alert-network" >
-		No network conection !! {{message}}
+	<div class="alert-network" *ngIf="networkMessage">
+		Network Status !! {{networkMessage}}
 	</div>
+	
+	<div class="alert-network" >
+		Network Status !! 
+	</div>
+	
+	<network-notify></network-notify>
 	
 	<form (ngSubmit)="validateUserAuthentication('Login',this)">
 		<ion-list id="login-list2">

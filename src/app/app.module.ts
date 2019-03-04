@@ -6,6 +6,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { HttpClientModule } from '@angular/common/http';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
+import { Network } from '@ionic-native/network/ngx';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -16,14 +17,21 @@ import { LoginModalForm } from '../pages/login/login-modal-form';
 
 //--- providers
 import { LocalStorageProvider } from '../providers/local-storage/local-storage';
-import { RestProvider } from '../providers/rest/rest';
-import { NetworkNotificationProvider } from '../providers/network-notification/network-notification';
+import { RestApiProvider } from '../providers/rest-api/rest-api';
+import { NetworkNotifyProvider } from '../providers/network-notify/network-notify';
+
+//--- directives
+import { NetworkNotifyDirective } from '../directives/network-notify/network-notify';
+import { NetworkNotifyComponent } from '../components/network-notify/network-notify';
+
 
 @NgModule({
   declarations: [
     MyApp,
     LoginModalForm,
-    DrawpadPage
+    DrawpadPage,
+	NetworkNotifyComponent,
+	NetworkNotifyDirective
   ],
   imports: [
     BrowserModule,
@@ -41,11 +49,12 @@ import { NetworkNotificationProvider } from '../providers/network-notification/n
   providers: [
     StatusBar,
     SplashScreen,
+	Network,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LocalStorageProvider,
-    RestProvider,
+    RestApiProvider,
     FingerprintAIO,
-    NetworkNotificationProvider
+    NetworkNotifyProvider
   ]
 })
 export class AppModule { }
