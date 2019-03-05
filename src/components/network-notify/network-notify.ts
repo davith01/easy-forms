@@ -1,22 +1,33 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import 'rxjs/add/operator/timeout'; // otherwise http client for timeout
 
-/**
- * Generated class for the NetworkNotifyComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
-  selector: 'network-notify',
+  selector: 'network-notify-component',
   templateUrl: 'network-notify.html'
 })
 export class NetworkNotifyComponent {
 
-  text: string;
+  status: boolean = false;
 
-  constructor() {
-    console.log('Hello NetworkNotifyComponent Component');
-    this.text = 'Hello World';
+  constructor(public http: HttpClient) {
+	  
+	   setInterval(() => {
+			this.initNetworkNotify();
+	   }, 6000);
+		
+    
+  }
+  
+  initNetworkNotify(){
+    let apiUrlTest = 'http://www.mocky.io/v2/5c7428a32f000036009640ca';
+	this.http.post(apiUrlTest,{})
+	.timeout(5000)
+	.subscribe((result) => {
+		this.status = true;
+	}, error => {
+		this.status = false;
+	});
   }
 
 }

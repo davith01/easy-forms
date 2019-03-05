@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { LoadingController, ToastController } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
@@ -32,12 +32,13 @@ export class LoginPage {
 	showFingerPrint =  false;
 	networkMessage: string;
 
+	@ViewChild(NetworkNotifyComponent) public networkNotifyComponent : NetworkNotifyComponent;
+	
 	constructor(public navCtrl: NavController, public navParams: NavParams,
 				public faio: FingerprintAIO, public modalCtrl: ModalController,
 			//	public networkNotify: NetworkNotifyProvider,
 				public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
-				public toastCtrl: ToastController, public loadingCtrl: LoadingController,
-				public networkNotify: NetworkNotifyComponent) {
+				public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
 
 		//initialize the FingerPrint control
 		this.faio.isAvailable().then(result => {

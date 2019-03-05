@@ -1,4 +1,8 @@
-<!-- Generated template for the NetworkNotifyComponent component -->
-<div>
-  {{text}}
+<div *ngIf="!status" class="red">
+	Not Network connection !! 
+	<ion-icon name="wifi"> </ion-icon>
+</div>
+
+<div *ngIf="status" >
+	<ion-icon name="wifi" class="green"> </ion-icon>
 </div>

@@ -21,24 +21,24 @@ import { RestApiProvider } from '../providers/rest-api/rest-api';
 import { NetworkNotifyProvider } from '../providers/network-notify/network-notify';
 
 //--- directives
-import { NetworkNotifyDirective } from '../directives/network-notify/network-notify';
-import { NetworkNotifyComponent } from '../components/network-notify/network-notify';
+//import { NetworkNotifyDirective } from '../directives/network-notify/network-notify';
+import { ComponentsModule } from '../components/components.module';
+//import { NetworkNotifyComponent } from '../components/network-notify/network-notify';
 
 
 @NgModule({
   declarations: [
     MyApp,
     LoginModalForm,
-    DrawpadPage,
-	NetworkNotifyComponent,
-	NetworkNotifyDirective
+    DrawpadPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     SignaturePadModule,
     IonicStorageModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+	ComponentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
