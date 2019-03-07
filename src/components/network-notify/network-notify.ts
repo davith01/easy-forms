@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import 'rxjs/add/operator/timeout'; // otherwise http client for timeout
+import { Platform, Events } from 'ionic-angular';
+import { Network } from '@ionic-native/network/ngx';
+
 
 @Component({
   selector: 'network-notify-component',
@@ -8,26 +9,53 @@ import 'rxjs/add/operator/timeout'; // otherwise http client for timeout
 })
 export class NetworkNotifyComponent {
 
-  status: boolean = false;
+  statusClass: string;
+  platformInfo: any;
+  previousStatus: any = 'x';
+  status: any = { color: 'grey' };
 
-  constructor(public http: HttpClient) {
-	  
-	   setInterval(() => {
-			this.initNetworkNotify();
-	   }, 6000);
+  constructor(public network: Network, public platform: Platform) {
 		
-    
-  }
-  
-  initNetworkNotify(){
-    let apiUrlTest = 'http://www.mocky.io/v2/5c7428a32f000036009640ca';
-	this.http.post(apiUrlTest,{})
-	.timeout(5000)
-	.subscribe((result) => {
-		this.status = true;
-	}, error => {
-		this.status = false;
-	});
-  }
-
+		this.platform.ready().then((readySource) => {
+			this.platformInfo = this.getPlatformInfo(readySource);
+			if(this.platform.is('cordova')) {
+				this.initializeNetworkEvents();
+			}
+		});
+		
+    }
+	
+	initializeNetworkEvents() {
+		
+		this.network.onDisconnect().subscribe(() => {
+			if (this.previousStatus === 'Online') {
+				//this.eventCtrl.publish('network:offline');
+				this.status.color = 'red';
+				
+			}
+			this.previousStatus = 'Offline';
+		});
+		this.network.onConnect().subscribe(() => {
+			if (this.previousStatus === 'Offline') {
+				//this.eventCtrl.publish('network:online');
+				this.status.color = 'green';
+			}
+			this.previousStatus = 'Online';
+		});
+    }
+	
+    getPlatformInfo(readySource) {
+		  return { 'core': this.platform.is('core').toString(),
+				   'cordova': this.platform.is('cordova').toString(),
+				   'cordova2': window.hasOwnProperty('cordova'),
+				   'android': this.platform.is('android').toString(),
+				   'mobileweb': this.platform.is('mobileweb').toString(),
+				   'list': JSON.stringify(this.platform.platforms()),
+				   'version': JSON.stringify(this.platform.versions()),
+				   'tablet': this.platform.is('tablet').toString(),
+				   'Landscape': this.platform.isLandscape().toString(),
+				   'Portrait': this.platform.isPortrait().toString(),
+				   'readySource': readySource.toLowerCase()
+			}
+    }
 }

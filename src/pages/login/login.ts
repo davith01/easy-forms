@@ -2,7 +2,6 @@ import { Component,ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { LoadingController, ToastController } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-//import { NetworkNotifyProvider } from '../../providers/network-notify/network-notify';
 import { RestApiProvider } from '../../providers/rest-api/rest-api';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
 import { LoginModalForm } from './login-modal-form';
@@ -44,20 +43,9 @@ export class LoginPage {
 		this.faio.isAvailable().then(result => {
 			this.showFingerPrint = true;
 		}).catch(err => {
-			this.showToast(err);
 			this.showFingerPrint = false;
 		});
 		
-		let _self = this;
-		
-		/** /
-		//Initialize the Network notification control
-		this.networkNotify.networkStatus(function(data){
-			_self.networkMessage = JSON.stringify(data);
-		},function(data){
-			_self.networkMessage = JSON.stringify(data);
-		});	
-		/**/
 	}
 	
 	
@@ -69,7 +57,7 @@ export class LoginPage {
 	validateUserAuthentication(type: string, data: RequestRestInterface) {
 
 		let loading = this.loadingCtrl.create({
-			content: 'Please wait...'
+			content: 'Por favor espere...'
 		});
 
 		loading.present().then(() => { //start the loading component
@@ -93,10 +81,10 @@ export class LoginPage {
 					}
 
 					this.goToHome();
-
 				}
 				else if (result.error) { 
 					// TODO: if network doesn't work
+					// and user or passwd error
 					
 					let _self = this;
 					// validate user authentication cache
@@ -106,7 +94,7 @@ export class LoginPage {
 							_self.navCtrl.setRoot('MenuPage');
 						}
 						else {
-							let messageErr = 'Can\'t get user session';
+							let messageErr = 'No puede iniciar sesión de usuario';
 							_self.showToast(messageErr);
 						}	
 					});
@@ -115,7 +103,7 @@ export class LoginPage {
 			});
 		});
 
-	}
+	}	
 
 
 	loginFingerPrint() {

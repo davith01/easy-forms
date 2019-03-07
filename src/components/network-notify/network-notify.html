@@ -1,8 +1,5 @@
-<div *ngIf="!status" class="red">
-	Not Network connection !! 
-	<ion-icon name="wifi"> </ion-icon>
-</div>
-
-<div *ngIf="status" >
-	<ion-icon name="wifi" class="green"> </ion-icon>
-</div>
+<ion-fab top right edge [ngStyle]="{'color': 'black'}">
+	<button ion-fab class="network-fab" mini> <ion-icon name="wifi"></ion-icon></button>
+	<ion-fab-list>
+	</ion-fab-list>
+</ion-fab>
