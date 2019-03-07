@@ -7,16 +7,14 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
 import { LoginModalForm } from './login-modal-form';
 import { NetworkNotifyComponent } from '../../components/network-notify/network-notify';
 
-export interface ResponseRestInterface {
-	accessToken: string;
-	userAuth?: any;
-	message?: string;
+export interface LoginResponseInterface {
+	success: any;
 	error?: any;
-}
+} 
 
-export interface RequestRestInterface {
-	loginEmail: string;
-	loginPassword: string;
+export interface LoginRequestInterface {
+	email: string;
+	password: string;
 }
 
 @IonicPage()
@@ -34,8 +32,7 @@ export class LoginPage {
 	@ViewChild(NetworkNotifyComponent) public networkNotifyComponent : NetworkNotifyComponent;
 	
 	constructor(public navCtrl: NavController, public navParams: NavParams,
-				public faio: FingerprintAIO, public modalCtrl: ModalController,
-			//	public networkNotify: NetworkNotifyProvider,
+				public faio: FingerprintAIO, public modalCtrl: ModalController, 
 				public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
 				public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
 
@@ -44,17 +41,16 @@ export class LoginPage {
 			this.showFingerPrint = true;
 		}).catch(err => {
 			this.showFingerPrint = false;
-		});
+		}); 
 		
-	}
-	
+	} 
 	
 	goToHome() {
 		//continue with access to the app
 		this.navCtrl.setRoot('MenuPage');
 	}
 	
-	validateUserAuthentication(type: string, data: RequestRestInterface) {
+	validateUserAuthentication(type: string, data: LoginRequestInterface) {
 
 		let loading = this.loadingCtrl.create({
 			content: 'Por favor espere...'
@@ -62,15 +58,15 @@ export class LoginPage {
 
 		loading.present().then(() => { //start the loading component
 		
-			let userAuth = { 'loginEmail': data.loginEmail, 'loginPassword': data.loginPassword };
+			let userAuth = { 'email': data.email, 'password': data.password };
 		
 			//invoke rest api authentication
-			this.restApi.getAuthSession(userAuth).then((result: ResponseRestInterface) => {
+			this.restApi.getAuthSession(userAuth).then((result: LoginResponseInterface) => {
 
 				//stop the loading component
 				loading.dismiss(); 
 				
-				if (result.accessToken) { 
+				if (result.success) { 
 
 					//if session is ok, save to localstorage
 					this.localStorage.setUserAuth(userAuth);
@@ -103,8 +99,7 @@ export class LoginPage {
 			});
 		});
 
-	}	
-
+	} 
 
 	loginFingerPrint() {
 		
@@ -124,7 +119,7 @@ export class LoginPage {
 					}
 				});
 			}
-		});
+		}); 
 	}
 
 	startFingerPrint() {
@@ -159,6 +154,7 @@ export class LoginPage {
 		this.localStorage.getUserAuth().then((result) => {
 			this.storageUsers = JSON.stringify(result||[]);
 		});
-		
 	}
+	
+	
 }

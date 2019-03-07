@@ -8,25 +8,25 @@
 	<form (ngSubmit)="validateUserAuthentication('Login',this)">
 		
 		<ion-item id="login-input1">
-			<ion-label stacked> User name</ion-label>
-			<ion-input type="email" [(ngModel)]="loginEmail" [ngModelOptions]="{standalone: true}" value="jhon@smith.com"></ion-input>
+			<ion-label stacked> Usuario</ion-label>
+			<ion-input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" value="cristianjojoa01@gmail.com"></ion-input>
 		</ion-item>
 		<ion-item id="login-input2">
-			<ion-label stacked> Password </ion-label>
-			<ion-input type="password" [(ngModel)]="loginPassword" [ngModelOptions]="{standalone: true}" value="123"></ion-input>
+			<ion-label stacked> Contraseña </ion-label>
+			<ion-input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" value="cristian12"></ion-input>
 		</ion-item>
 	
 		<div class="spacer" style="height:40px;"></div>
 		
-		<button type="submit" class="login-button" ion-button block color="stable">
-			Log in
+		<button type="submit" class="login-button btn-primary" ion-button block color="stable">
+			Iniciar
 		</button>
 		
 		<div class="spacer" style="height:80px;"></div>
 		
 	</form>
 	<button *ngIf="showFingerPrint" id="login-finger" ion-button round full outline block color="positive" (click)="startFingerPrint()">
-		O inicie con Huella Digital&nbsp;
+		O ingrese con Huella Digital&nbsp;
 		<ion-icon name="finger-print" class="finger-print"></ion-icon>
 	</button>
 

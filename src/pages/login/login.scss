@@ -1,4 +1,21 @@
 page-login {
+
+
+body {
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #2f4050;
+    font-size: 13px;
+    color: #676a6c;
+    background-color: #f3f3f4 !important;
+}
+
+ion-content {
+	margin: 0 auto;
+    padding-top: 40px;
+	text-align: center;
+}
+
+
 	.logoIcon {
 		max-width: 87%;
 		margin-left: 14px;

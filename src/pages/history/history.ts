@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { LoadingController, ToastController } from 'ionic-angular';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
+import { RestApiProvider } from '../../providers/rest-api/rest-api';
 
 @IonicPage()
 @Component({
@@ -11,7 +13,9 @@ export class HistoryPage {
 
   orders: any = {};
   
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, 
+			  public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
+			  public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
 	
 	let currentDate: String = new Date().toISOString();
 	let typesForms = [{
@@ -65,6 +69,23 @@ export class HistoryPage {
 	  this.navCtrl.push('OrderPage',{'order':order});
   }
   
-  
+  ionViewDidLoad() {	  
+	  
+	let loading = this.loadingCtrl.create({
+		content: 'Por favor espere...'
+	});
 
+	loading.present().then(() => { //start the loading component
+	
+		//invoke rest api 
+		this.restApi.getOrders().then((result) => {
+
+			//stop the loading component
+			loading.dismiss();
+			
+			this.orders = result;
+			
+		});
+	});
+  }
 }

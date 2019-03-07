@@ -1,5 +1,7 @@
-<ion-fab top right edge [ngStyle]="{'color': 'black'}">
+<div *ngIf="previousStatus">
+<ion-fab top right edge [ngStyle]="{'color': 'black'}" >
 	<button ion-fab class="network-fab" mini> <ion-icon name="wifi"></ion-icon></button>
 	<ion-fab-list>
 	</ion-fab-list>
 </ion-fab>
+</div>

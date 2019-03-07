@@ -3,19 +3,20 @@
 	<form (ngSubmit)="loginComplete()">
 		<ion-list>
 
-			<p>Does this user accept local storage of fingerprints ? </p>
+			<p>Activación de huella</p>
+			<p>Activa la lectura de huella para autenticarte con mayor seguridad</p>
 
 			<ion-item id="login-input1">
-				<ion-label stacked> User name</ion-label>
-				<ion-input type="email" [(ngModel)]="loginEmail" [ngModelOptions]="{standalone: true}"></ion-input>
+				<ion-label stacked> Usuario</ion-label>
+				<ion-input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}"></ion-input>
 			</ion-item>
 			<ion-item id="login-input2">
-				<ion-label stacked> Password </ion-label>
-				<ion-input type="password" [(ngModel)]="loginPassword" [ngModelOptions]="{standalone: true}"></ion-input>
+				<ion-label stacked> Contraseña </ion-label>
+				<ion-input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}"></ion-input>
 			</ion-item>
 		</ion-list>
-		<button type="submit" class="login-button" ion-button block color="stable">
-			Log in
+		<button type="submit" class="login-button btn-primary" ion-button block color="stable">
+			Ingresar
 		</button>
 	</form>
 

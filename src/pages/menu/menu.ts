@@ -102,4 +102,5 @@ export class MenuPage {
 
     toast.present(toast);
   }
+  
 }

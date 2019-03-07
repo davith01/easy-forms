@@ -11,7 +11,7 @@ export class NetworkNotifyComponent {
 
   statusClass: string;
   platformInfo: any;
-  previousStatus: any = 'x';
+  previousStatus: any;
   status: any = { color: 'grey' };
 
   constructor(public network: Network, public platform: Platform) {

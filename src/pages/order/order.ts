@@ -8,7 +8,7 @@ declare var cordova:any;    //global;
 @IonicPage()
 @Component({
   selector: 'page-order',
-  templateUrl: 'order.html',
+  templateUrl: 'order.html', 
 })
 export class OrderPage {
 
