@@ -24,10 +24,8 @@ export interface LoginRequestInterface {
 })
 export class LoginPage {
 
-	loginEmail: string;
-	loginPassword: string;
 	showFingerPrint =  false;
-	networkMessage: string;
+	networkMessage: any;
 
 	@ViewChild(NetworkNotifyComponent) public networkNotifyComponent : NetworkNotifyComponent;
 	
@@ -66,7 +64,9 @@ export class LoginPage {
 				//stop the loading component
 				loading.dismiss(); 
 				
-				if (result.success) { 
+				this.networkMessage = JSON.stringify(result);
+				
+				/*if (result.success) { 
 
 					//if session is ok, save to localstorage
 					this.localStorage.setUserAuth(userAuth);
@@ -79,22 +79,29 @@ export class LoginPage {
 					this.goToHome();
 				}
 				else if (result.error) { 
-					// TODO: if network doesn't work
-					// and user or passwd error
 					
-					let _self = this;
-					// validate user authentication cache
-					this.localStorage.isUserAuth(userAuth,function(isValid){
-						if (isValid) {
-							//continue with access to the app
-							_self.navCtrl.setRoot('MenuPage');
-						}
-						else {
-							let messageErr = 'No puede iniciar sesión de usuario';
-							_self.showToast(messageErr);
-						}	
-					});
+					//user or password error
+					if(result.error.status === 401) {
+						let messageErr = 'Usuario o contraseña no validos';
+						this.showToast(messageErr);
+					}
+					else {
+						// TODO: if network doesn't work
+						let _self = this;	
+						// validate user authentication cache
+						this.localStorage.isUserAuth(userAuth,function(isValid){
+							if (isValid) {
+								//continue with access to the app
+								_self.navCtrl.setRoot('MenuPage');
+							}
+							else {
+								let messageErr = 'No puede iniciar sesión de usuario';
+								_self.showToast(messageErr);
+							}	
+						});
+					}
 				}
+				*/
 
 			});
 		});

@@ -13,17 +13,19 @@
 		</ion-item>
 		<ion-item id="login-input2">
 			<ion-label stacked> Contraseña </ion-label>
-			<ion-input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" value="cristian12"></ion-input>
+			<ion-input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" value="cristian123"></ion-input>
 		</ion-item>
 	
 		<div class="spacer" style="height:40px;"></div>
 		
 		<button type="submit" class="login-button btn-primary" ion-button block color="stable">
 			Iniciar
+			
 		</button>
 		
 		<div class="spacer" style="height:80px;"></div>
 		
+		{{networkMessage}}
 	</form>
 	<button *ngIf="showFingerPrint" id="login-finger" ion-button round full outline block color="positive" (click)="startFingerPrint()">
 		O ingrese con Huella Digital&nbsp;

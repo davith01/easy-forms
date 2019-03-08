@@ -14,17 +14,14 @@ export class RestApiProvider {
 	httpAuthPost(url, data) {
 		
 		let headers = new HttpHeaders({
-		  'Access-Control-Allow-Headers':'Authorization, Content-Type',
-		  'Content-Type': 'application/json; charset=utf-8'
-		}); 
+		  'Content-Type': 'application/json'
+		});
  
 		return new Promise(resolve => {
 			this.http.post(url, JSON.stringify(data) , {headers: headers})
 				.timeout(10000)
 				.subscribe((result) => {
-
-					resolve({ data: result });
-
+					resolve( result );
 				}, error => {
 					resolve({ error: error });
 				});
@@ -32,12 +29,15 @@ export class RestApiProvider {
 	}
 	
 	httpAuthGet(url) { 
+		let headers = new HttpHeaders({
+		  'Content-Type': 'application/json',
+		});
 		return new Promise(resolve => {
-			this.http.get(url)
-				.timeout(10000)
+			this.http.get(url,{headers: headers})
+				//.timeout(10000)
 				.subscribe((result) => {
 
-					resolve({ data: result });
+					resolve( result );
 
 				}, error => {
 					resolve({ error: error });
@@ -46,7 +46,7 @@ export class RestApiProvider {
 	}
  
 	getAuthSession(data) {
-		let url =  'http://tester.estrategicacomunicaciones.com/invitro/api/login?email='+data.mail+'&password='+data.password;
+		let url =  'http://tester.estrategicacomunicaciones.com/invitro/api/login?email='+data.email+'&password='+data.password;
 		return this.httpAuthGet(url);
 	}
 	
