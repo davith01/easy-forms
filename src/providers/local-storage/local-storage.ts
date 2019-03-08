@@ -4,6 +4,8 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class LocalStorageProvider {
 
+	token: string; 
+	
 	constructor(private storage: Storage) {
 		this.storage.ready().then(() => {
 			console.log('storage ready');
@@ -21,17 +23,18 @@ export class LocalStorageProvider {
 			if(result) {
 				//return else user authentication
 				result = result.filter((dataAuth) => {
-					return userAuth.loginEmail !== dataAuth.loginEmail;
+					return userAuth.email !== dataAuth.email;
 				});
 			}
 			else { 
 				result = [];
 			}
 			//add this user authentication
+			
 			result.push(userAuth);
 			this.storage.set('users-auth', result);
 		});
-	}
+	} 
 
 	//return true if user auth data match in the user auth list
 	isUserAuth(userAuth,retrive) {
@@ -39,14 +42,24 @@ export class LocalStorageProvider {
 		this.storage.get('users-auth').then((result) => {
 			result = result || [];
 			let userAuthList = result.filter((dataAuth) => {
-				return userAuth.loginEmail === dataAuth.loginEmail && userAuth.loginPassword === dataAuth.loginPassword;
+				return userAuth.email === dataAuth.email && userAuth.password === dataAuth.password;
 			});
 			
 			//Return user authentication data if exists
 			retrive(userAuthList[0] ? userAuthList[0] : false);
 		});
 	}
+	
+	/* TokenAuth Storage */
+	
+	getTokenAuth() {
+		return this.token;
+	}
 
+	setTokenAuth(token) {
+		this.token = token;
+	}
+	
 	/* FingerPrintAuth Storage */
 	
 	getFingerPrintAuth() {

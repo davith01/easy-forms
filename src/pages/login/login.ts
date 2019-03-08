@@ -39,9 +39,8 @@ export class LoginPage {
 			this.showFingerPrint = true;
 		}).catch(err => {
 			this.showFingerPrint = false;
-		}); 
-		
-	} 
+		});		
+	}
 	
 	goToHome() {
 		//continue with access to the app
@@ -58,17 +57,63 @@ export class LoginPage {
 		
 			let userAuth = { 'email': data.email, 'password': data.password };
 		
-			//invoke rest api authentication
-			this.restApi.getAuthSession(userAuth).then((result: LoginResponseInterface) => {
-
-				//stop the loading component
-				loading.dismiss(); 
+			this.restApi.getAuthSession(userAuth) 
+			.subscribe((result: LoginResponseInterface) => {
 				
+				loading.dismiss();  //stop the loading component
+				
+				//if session is ok, save to localstorage
+				if (result.success) { 
+
+					let token = result.success.token;
+					this.localStorage.setUserAuth(userAuth);
+					this.localStorage.setTokenAuth(token);
+
+					//save the fingerprint autentication
+					if (type === 'FingerPrint') {
+						this.localStorage.setFingerPrintAuth(userAuth);
+					}
+
+					this.goToHome();
+				}				
+				
+			}, error => {
+				loading.dismiss();  //stop the loading component
+				 
+				//user or password error
+				if(error.status === 401) {
+					let messageErr = 'Usuario o contraseña no validos';
+					this.showToast(messageErr);
+				}
+				else {
+					
+					// if network doesn't work.. validate user authentication cache
+					let _self = this;
+
+					this.localStorage.isUserAuth(userAuth,function(isValid){
+						if (isValid) {
+							//continue with access to the app
+							_self.navCtrl.setRoot('MenuPage');
+						}
+						else {
+							let messageErr = 'No puede iniciar sesión de usuario';
+							_self.showToast(messageErr);
+						}	
+					});
+				}				
+			});			
+			
+			//invoke rest api authentication
+			/*
+			 this.restApi.getAuthSession(userAuth).then((result: LoginResponseInterface) => {
+  
 				this.networkMessage = JSON.stringify(result);
 				
-				/*if (result.success) { 
+				 if (result.success) { 
 
+					userAuth.token = result.success.token;
 					//if session is ok, save to localstorage
+					
 					this.localStorage.setUserAuth(userAuth);
 
 					//save the fingerprint autentication
@@ -101,9 +146,8 @@ export class LoginPage {
 						});
 					}
 				}
-				*/
-
 			});
+			*/
 		});
 
 	} 

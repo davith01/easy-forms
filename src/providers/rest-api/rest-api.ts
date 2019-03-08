@@ -3,11 +3,13 @@ import 'rxjs/add/operator/timeout'; // otherwise http client for timeout
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoadingController, ToastController } from 'ionic-angular';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 
 @Injectable()
 export class RestApiProvider {
  
-	constructor(public http: HttpClient, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
+	constructor(public http: HttpClient, public localStorage: LocalStorageProvider,
+				public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
 
 	}
 	
@@ -29,9 +31,12 @@ export class RestApiProvider {
 	}
 	
 	httpAuthGet(url) { 
+		let token = this.localStorage.getTokenAuth();
+		
 		let headers = new HttpHeaders({
 		  'Content-Type': 'application/json',
-		});
+		  'Authorization': 'Bearer ' + token
+		}); 
 		return new Promise(resolve => {
 			this.http.get(url,{headers: headers})
 				//.timeout(10000)
@@ -47,7 +52,7 @@ export class RestApiProvider {
  
 	getAuthSession(data) {
 		let url =  'http://tester.estrategicacomunicaciones.com/invitro/api/login?email='+data.email+'&password='+data.password;
-		return this.httpAuthGet(url);
+		return this.http.get(url);
 	}
 	
 	getOrders() {
