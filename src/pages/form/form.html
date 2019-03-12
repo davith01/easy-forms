@@ -1,17 +1,30 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Invitro Forms & Validations</ion-title>
+    <ion-title>Invitro - Planilla de Evaluación de Receptoras</ion-title>
   </ion-navbar>
+  <ion-item style="margin: 0 auto" >Registro {{indx + 1 }} de {{order.itemList.length + ajustList }} </ion-item>
+  
 </ion-header>
 
 <ion-content padding class="form-content">
+<ion-fab right middle>
+  <button class="fab-button" ion-fab [disabled]="!validations_form.valid" (click)="nextItem()">
+    <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
+  </button>
+</ion-fab>
+
+<ion-fab left middle>
+  <button ion-fab class="fab-button" [disabled]="indx===0" (click)="backItem()">
+    <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
+  </button>
+</ion-fab>
 
   <form class="form" [formGroup]="validations_form">
-  
     <ion-item>
       <ion-label color="primary">Id. Animal</ion-label>
       <ion-input type="text" formControlName="idAnimal" [(ngModel)]="dataItem.idAnimal"></ion-input>
     </ion-item>
+	
 	<div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.idAnimal" >
         <div class="error-message" *ngIf="validations_form.get('idAnimal').hasError(validation.type) && 
@@ -25,16 +38,7 @@
       <ion-label color="primary">Chapeta</ion-label>
       <ion-input type="text" formControlName="chapeta" [(ngModel)]="dataItem.chapeta"></ion-input>
     </ion-item>
-	<div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.chapeta" >
-        <div class="error-message" *ngIf="validations_form.get('chapeta').hasError(validation.type) && 
-		(validations_form.get('chapeta').dirty || validations_form.get('chapeta').touched)">
-          {{ validation.message }}
-        </div>
-      </ng-container>
-    </div>
-    
-    <ion-item>
+	<ion-item>
       <ion-label color="primary">Diagnóstico</ion-label>
       <ion-input  type="text" formControlName="diagnostico" [(ngModel)]="dataItem.diagnostico"></ion-input>
     </ion-item>
@@ -45,11 +49,22 @@
     </ion-item>
 	
 	<ion-item>
-      <ion-label color="primary">Sincronizada {{validations_form.valid}}</ion-label>
+      <ion-label color="primary">Sincronizada</ion-label>
       <ion-toggle formControlName="sincronizada" [(ngModel)]="dataItem.sincronizada"></ion-toggle>
     </ion-item>
 	
-	<ion-row>
+	
+	<ion-item>
+      <ion-label color="primary">Encargado</ion-label>
+      <ion-input  type="text" formControlName="encargado" [(ngModel)]="dataItem.encargado"></ion-input>
+    </ion-item>
+	
+	<ion-item>
+      <ion-label color="primary">Observaciones</ion-label>
+      <ion-input  type="text" formControlName="observaciones" [(ngModel)]="dataItem.observaciones"></ion-input>
+    </ion-item>
+	
+	<!--ion-row>
 	  <ion-col>
 		<button ion-button small outline icon-start [disabled]="!validations_form.valid" (click)="onSubmit(true)">
 		  <ion-icon name='log-in' type="submit"  ></ion-icon>
@@ -60,7 +75,7 @@
 		  Save and continue
 		</button>
 	  </ion-col>
-	</ion-row>
+	</ion-row-->
 
 
 	

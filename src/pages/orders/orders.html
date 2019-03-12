@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Invitro - Ordenes Aprobadas </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+<ion-grid>
+    <ion-row >
+      <ion-col >
+		<ion-card *ngFor="let order of orders">
+		  <ion-card-header class="ibox-title">
+		  	<ion-grid>
+				<ion-row>
+					<ion-col>
+					<h5 class="white-color">Orden de Producción {{order.id}}</h5>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+
+		  </ion-card-header>
+
+		  <ion-card-content  style="font-size: 1.3rem;">
+			Orden realizada a nombre de {{order.client.bussiness_name}} con numero de identificacion {{order.client.identification_number}}
+			<p>
+			<ul> Para su direccion en la ciudad de Bogotá contactar con {{order.client.contact}}
+			<li>Dirección de contacto {{order.client.address}} </li>
+			<li>Telefono de contacto {{order.client.phone || order.client.cellphone}}</li>
+			</ul>
+			
+			<small>Fecha  {{order.date | date}} </small>
+		  </ion-card-content>
+		</ion-card>
+	  </ion-col>
+   </ion-row>
+</ion-grid>
+
+
+</ion-content>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
+import { LoadingController, ToastController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -10,76 +12,161 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 
 export class FormPage {
 
-  dataItem: any = {};
-  dataList: any = [];
+  order: any;
+  parentPage: any;
+  ajustList: number = 0;
   
-  validations_form: FormGroup;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public modal: ModalController) {
-	  let data = this.navParams.get('item');
-	  this.dataItem = data || {};
-	  
-	  this.validations_form = this.formBuilder.group({
+  action: string;
+  
+  
+  //dataIndex: any;
+  dataItem: any;
+  itemIndex: any;
+  backButton: boolean = false;
+  nextButton: boolean = false;
+  indx: number;
+  
+  //validations_form = new FormGroup({
+  validations_form = this.formBuilder.group({
 		idAnimal: new FormControl('', Validators.required),
-		chapeta: new FormControl('', Validators.compose([
-			Validators.required,
-			Validators.maxLength(25),
-			Validators.minLength(5)
-		])),
-		diagnostico: new FormControl('', Validators.required),
-		apta: new FormControl(true, Validators.pattern('true')),
-		sincronizada: new FormControl(true, Validators.pattern('true'))
+		chapeta: new FormControl('', Validators.maxLength(55)),
+		diagnostico: new FormControl('', Validators.maxLength(55)),
+		apta: null,
+		sincronizada: null,
+		encargado: new FormControl('', Validators.maxLength(100)),
+		observaciones: new FormControl('', Validators.maxLength(100))
+	});
+  
+  constructor(public navCtrl: NavController, public navParams: NavParams, 
+			  public localStorage: LocalStorageProvider,
+			  public formBuilder: FormBuilder, public modal: ModalController,
+			  public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+	
+	  this.order = this.navParams.get('order');
+	  this.parentPage = this.navParams.get('parentPage');
+	  this.action = this.navParams.get('action');
+	  
+	  if(this.action === 'update') {
+		this.indx = this.navParams.get('indx');
+		this.dataItem = this.order.itemList[this.indx];
+	  }
+	  else if (this.action === 'new') {
+		  this.newItem();
+	  }
+  }
+  
+  newItem() {
+	this.dataItem = {
+		idAnimal: '',
+		chapeta: '',
+		diagnostico: '',
+		apta: true,
+		sincronizada: true,
+		encargado: '',
+		observaciones: ''
+	};
+	this.ajustList = 1;
+	this.action === 'new';
+	this.indx = this.order.itemList.length;
+	
+	
+	this.validations_form.reset({
+		idAnimal: '',
+		chapeta: '',
+		diagnostico: '',
+		apta: '',
+		sincronizada: '',
+		encargado: '',
+		observaciones: ''
 	});
   }
-
   
+  nextItem(){
+	if(this.validations_form.valid) {
+		if(this.action === 'new') {
+			this.order.itemList.push(this.dataItem);
+			this.showToast('Registro agregado');
+			this.newItem();
+		}
+		if(this.action === 'update') {
+			let list = [];
+			for(let item of this.order.itemList){
+				list.push( item.idAnimal === this.dataItem.idAnimal ? this.dataItem :  item);
+			}
+			this.order.itemList = list;
+			this.showToast('Registro modificado');
+			
+			if(this.indx === this.order.itemList.length - 1 ){
+				this.newItem();
+			}
+			else {
+				this.indx ++;
+				this.dataItem = this.order.itemList[this.indx];
+			}
+		}
+		
+		this.parentPage.refresItemList(this.order);
+	}
+  }
   
+  backItem() {
+	if(this.validations_form.valid) {
+		if(this.action === 'new') {
+			this.order.itemList.push(this.dataItem);
+			this.ajustList = 0;
+			this.showToast('Registro agregado');
+		}
+		if(this.action === 'update') {
+			let list = [];
+			for(let item of this.order.itemList){
+				list.push( item.idAnimal === this.dataItem.idAnimal ? this.dataItem :  item);
+			}
+			this.order.itemList = list;
+			
+			this.showToast('Registro modificado');
+		}
+		
+		this.parentPage.refresItemList(this.order);
+	}
+	
+	this.indx --;
+	this.dataItem = this.order.itemList[this.indx];
+	this.action = 'update';
+  }
 
   validation_messages = {
 	'idAnimal': [
 	  { type: 'required', message: 'Código requerido.' }
-	],
-    'chapeta': [
-      { type: 'required', message: 'chapeta is required.' },
-      { type: 'minlength', message: 'chapeta must be at least 5 characters long.' },
-      { type: 'maxlength', message: 'chapeta cannot be more than 25 characters long.' }
-    ],
-    'name': [
-      { type: 'required', message: 'Name is required.' }
-    ],
-    'lastname': [
-      { type: 'required', message: 'Last name is required.' }
-    ],
-    'email': [
-      { type: 'required', message: 'Email is required.' },
-      { type: 'pattern', message: 'Enter a valid email.' }
-    ],
-    'phone': [
-      { type: 'required', message: 'Phone is required.' },
-      { type: 'validCountryPhone', message: 'Phone incorrect for the country selected' }
-    ],
-    'password': [
-      { type: 'required', message: 'Password is required.' },
-      { type: 'minlength', message: 'Password must be at least 5 characters long.' },
-      { type: 'pattern', message: 'Your password must contain at least one uppercase, one lowercase, and one number.' }
-    ],
-    'confirm_password': [
-      { type: 'required', message: 'Confirm password is required' }
-    ],
-    'matching_passwords': [
-      { type: 'areEqual', message: 'Password mismatch' }
-    ],
-    'terms': [
-      { type: 'pattern', message: 'You must accept terms and conditions.' }
-    ],
+	]
   };
-
-  onSubmit(exit: boolean) {
-	  this.dataList.push(this.dataItem);
-	  this.dataItem.idAnimal = '';
-	  //if(exit) this.navCtrl.push('OrderPage',this.dataList);
-	   if(exit) this.navCtrl.push('OrderPage',{"order":{},"itemList":this.dataList});
-	   
+  
+  ionViewWillLeave() {
+	
+	if(this.validations_form.valid) {
+		if(this.action === 'new') {
+			this.order.itemList.push(this.dataItem);
+			this.ajustList = 0;
+			this.showToast('Registro agregado');
+		}
+		if(this.action === 'update') {
+			let list = [];
+			for(let item of this.order.itemList){
+				list.push( item.idAnimal === this.dataItem.idAnimal ? this.dataItem :  item);
+			}
+			this.order.itemList = list;
+			this.showToast('Registro modificado');
+		}
+	}
+	
+    this.parentPage.refresItemList(this.order);
   }
- 
+  
+  showToast(message: string) {
+		let toast = this.toastCtrl.create({
+			message: message,
+			duration: 2000,
+			position: 'top'
+		});
+		toast.present(toast);
+  }
 }

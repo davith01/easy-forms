@@ -1,5 +1,5 @@
 import { Component,ViewChild } from '@angular/core';
-import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { SignaturePadComponent } from '../../components/signature-pad/signature-pad';
 import { NavController, ViewController } from 'ionic-angular';
 
 @Component({
@@ -8,7 +8,7 @@ import { NavController, ViewController } from 'ionic-angular';
 })
 export class DrawpadPage {
 
-@ViewChild(SignaturePad) public signaturePad : SignaturePad;
+@ViewChild(SignaturePadComponent) public signaturePadComponent : SignaturePadComponent;
 
   public signaturePadOptions : Object = {
     'minWidth': 2,
@@ -17,31 +17,32 @@ export class DrawpadPage {
   };
   public signatureImage : string;
   
-  constructor(public navCtrl: NavController, public viewCtrl : ViewController) { }
+  constructor(public navCtrl: NavController, public viewCtrl : ViewController) { 
+	//HTMLCanvasElement
+	this.signaturePadComponent.initSignaturePad(this.signaturePadOptions);
+  }
 
   closeModal(){
     this.navCtrl.pop();
   }
 
   drawComplete() {
-    this.signatureImage = this.signaturePad.toDataURL();
+    this.signatureImage = this.signaturePadComponent.toDataURL();
     let data  = {signatureImage: this.signatureImage};
 	this.viewCtrl.dismiss(data);
   }
 
   drawClear() {
-    this.signaturePad.clear();
+    this.signaturePadComponent.clear();
   }
   
   canvasResize() {
     let canvas = document.querySelector('canvas');
-    this.signaturePad.set('minWidth', 1);
-    this.signaturePad.set('canvasWidth', canvas.offsetWidth);
-    this.signaturePad.set('canvasHeight', canvas.offsetHeight);
+    this.signaturePadComponent.minWidth = 1;
   }
 
   ngAfterViewInit() {
-	this.signaturePad.clear();
+	this.signaturePadComponent.clear();
 	this.canvasResize();
   }
 

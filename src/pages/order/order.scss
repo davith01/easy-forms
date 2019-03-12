@@ -20,23 +20,37 @@ page-order {
     margin: 6px 8px 6px 0 !important;
   }
   
+  table {
   
-  .header .col {
-    background-color:lightgrey;
-	}
+  tr {
+  th{
+  height: 51px;
+  border: solid 1px grey;}
+  td{
+  height: 30px;
+  text-align: center;
+  border: solid 1px grey;}
+  }}
+  
+  .white-color {
+	color: white;
+  }
+  .add-button {
+	height: 3.3rem;
+	background-color: #1AB394;
+	margin-top: 20px;
+	margin-bottom: 10px;
+  }
+  .ibox-title {
+    background-color: #1AB394;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 2px 0 0;
+    color: inherit;
+    margin-bottom: 0;
+    padding: 5px 7px 2px;
+  }
 
-	.col {
-		border: solid 1px grey;
-		border-bottom-style: none;
-		border-right-style: none;
-	}
-
-	.col:last-child {
-		border-right: solid 1px grey;
-	}
-
-	.row:last-child .col {
-		border-bottom: solid 1px grey;
-	}
 
 }

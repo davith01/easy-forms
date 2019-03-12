@@ -20,12 +20,10 @@
 		
 		<button type="submit" class="login-button btn-primary" ion-button block color="stable">
 			Iniciar
-			
 		</button>
 		
 		<div class="spacer" style="height:80px;"></div>
 		
-		{{networkMessage}}
 	</form>
 	<button *ngIf="showFingerPrint" id="login-finger" ion-button round full outline block color="positive" (click)="startFingerPrint()">
 		O ingrese con Huella Digital&nbsp;

@@ -3,7 +3,8 @@ import { IonicPage, NavController, Nav } from 'ionic-angular';
 import { LoadingController, ToastController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-
+import { NetworkNotifyComponent } from '../../components/network-notify/network-notify';
+import { RestApiProvider } from '../../providers/rest-api/rest-api';
 
 export interface PageInterface {
   title: string;
@@ -25,20 +26,28 @@ export class MenuPage {
   disableFingerPrint = false;
   
   @ViewChild(Nav) nav: Nav;
-
+  @ViewChild(NetworkNotifyComponent) public networkNotifyComponent : NetworkNotifyComponent;
   pages = [
-    { title: 'App', pageName: 'TabsPage', tabComponent: 'appRoot', index: 0, icon: 'apps' },
-    { title: 'Forms', pageName: 'TabsPage', tabComponent: 'formRoot', index: 1, icon: 'albums' },
-    { title: 'Drawpad', pageName: 'TabsPage', tabComponent: 'drawRoot', index: 2, icon: 'paper-plane' }
+    { title: 'Ordenes', pageName: 'TabsPage', tabComponent: 'appRoot', index: 0, icon: 'apps' },
+    { title: 'Servicios', pageName: 'TabsPage', tabComponent: 'historyRoot', index: 1, icon: 'paper' }
   ];
 
   constructor(public navCtrl: NavController, public platform: Platform,
-    public localStorage: LocalStorageProvider,
-    public toastCtrl: ToastController) {
+			  public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
+			  public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
 		
 		//retrive finger print authentication data
 		this.localStorage.getFingerPrintAuth().then((result) => {
 			this.showFingerPrint = result ?  true : false;
+		});
+		
+		let loading = this.loadingCtrl.create({
+			content: 'Por favor espere...'
+		});
+		
+		loading.present().then(() => { //start the loading component
+			//invoke rest orders api 
+			this.loadOrders(loading);
 		});
   }
 
@@ -103,4 +112,55 @@ export class MenuPage {
     toast.present(toast);
   }
   
+  loadOrders(loading) {
+		let  typesForms = [{
+			"name": "Evaluación de receptoras",
+			"icon": "color-fill",
+			"color": "orangered"
+		},{
+			"name": "Aspiración Folicular",
+			"icon": "attach",
+			"color": "blue"
+		},{
+			"name": "Transferencia de embriones",
+			"icon": "bonfire",
+			"color": "grey"
+		},{
+			"name": "Diagnóstico (Dx1)",
+			"icon": "aperture",
+			"color": "green"
+		}];
+		
+		let listTypes = [typesForms[0],typesForms[0],typesForms[3],typesForms[2],typesForms[1],typesForms[1],typesForms[3]];
+		
+		//invoke rest orders api 
+		
+		this.localStorage.getServices().then((orders) => {
+			if(!orders) {
+				this.restApi.getServices().then((result: any) => {
+					loading.dismiss(); //stop the loading component
+					console.log(result)
+					if(result && !result.error){
+						let i =0;
+						let orders = [];
+						for(let res of result){
+							res.type =  listTypes[i];
+							i++;
+							orders.push(res);
+						}
+						this.localStorage.setServices(orders);
+					}
+				});
+			} else {
+				loading.dismiss(); //stop the loading component
+			}
+		});
+		
+		this.restApi.getOrders().then((orders: any) => {
+			if(orders && !orders.error) {
+				this.localStorage.setOrders(orders);	
+			}
+		});
+		
+   }
 }

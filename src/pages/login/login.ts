@@ -101,55 +101,8 @@ export class LoginPage {
 						}	
 					});
 				}				
-			});			
-			
-			//invoke rest api authentication
-			/*
-			 this.restApi.getAuthSession(userAuth).then((result: LoginResponseInterface) => {
-  
-				this.networkMessage = JSON.stringify(result);
-				
-				 if (result.success) { 
-
-					userAuth.token = result.success.token;
-					//if session is ok, save to localstorage
-					
-					this.localStorage.setUserAuth(userAuth);
-
-					//save the fingerprint autentication
-					if (type === 'FingerPrint') {
-						this.localStorage.setFingerPrintAuth(userAuth);
-					}
-
-					this.goToHome();
-				}
-				else if (result.error) { 
-					
-					//user or password error
-					if(result.error.status === 401) {
-						let messageErr = 'Usuario o contraseña no validos';
-						this.showToast(messageErr);
-					}
-					else {
-						// TODO: if network doesn't work
-						let _self = this;	
-						// validate user authentication cache
-						this.localStorage.isUserAuth(userAuth,function(isValid){
-							if (isValid) {
-								//continue with access to the app
-								_self.navCtrl.setRoot('MenuPage');
-							}
-							else {
-								let messageErr = 'No puede iniciar sesión de usuario';
-								_self.showToast(messageErr);
-							}	
-						});
-					}
-				}
 			});
-			*/
 		});
-
 	} 
 
 	loginFingerPrint() {
@@ -180,15 +133,13 @@ export class LoginPage {
 			localizedFallbackTitle: 'Use _Pin_', // Only iOS
 			localizedReason: '_Please authenticate_' // Only iOS
 		})
-			.then((result: any) => {
-				this.showToast(result);
-				this.loginFingerPrint();
-			})
-			.catch((error: any) => {
-				this.showToast(error);
-			});
+		.then((result: any) => {
+			this.loginFingerPrint();
+		})
+		.catch((error: any) => {
+			this.showToast(error);
+		});
 	}
-
 
 	showToast(message: string) {
 		let toast = this.toastCtrl.create({
@@ -198,14 +149,4 @@ export class LoginPage {
 		});
 		toast.present(toast);
 	}
-	
-	storageUsers: string;
-	
-	getUserAuth() {
-		this.localStorage.getUserAuth().then((result) => {
-			this.storageUsers = JSON.stringify(result||[]);
-		});
-	}
-	
-	
 }

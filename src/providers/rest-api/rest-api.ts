@@ -39,7 +39,7 @@ export class RestApiProvider {
 		}); 
 		return new Promise(resolve => {
 			this.http.get(url,{headers: headers})
-				//.timeout(10000)
+				.timeout(10000)
 				.subscribe((result) => {
 
 					resolve( result );
@@ -52,7 +52,12 @@ export class RestApiProvider {
  
 	getAuthSession(data) {
 		let url =  'http://tester.estrategicacomunicaciones.com/invitro/api/login?email='+data.email+'&password='+data.password;
-		return this.http.get(url);
+		return this.http.get(url).timeout(10000);
+	}
+	
+	getServices() {
+		let url =  'http://www.mocky.io/v2/5c83037730000064006b0bf0';
+		return this.httpAuthGet(url);
 	}
 	
 	getOrders() {

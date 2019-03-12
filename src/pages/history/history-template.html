@@ -1,14 +1,3 @@
-<ion-header *ngIf="order.type">
-  <ion-navbar>
-    <ion-title> 
-	  <h5> {{order.type.name}} <ion-icon end [name]="order.type.icon" class="title-icon" ></ion-icon></h5>
-	</ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content padding>
-
-
 <ion-card>
 
 <ion-card-header class="ibox-title">
@@ -69,11 +58,7 @@
 
 </ion-card-header>
 <ion-card-content>
-<button ion-button class="add-button" (click)="addNewForm()">
-	<ion-icon name='add'></ion-icon>
-  </button>
-
-<table style="width:100%;">
+<table style="width:100%">
   <tr>
     <th>Id Animal</th>
     <th>Chapeta</th> 
@@ -83,30 +68,59 @@
 	<th>Encargado</th>
 	<th>Observaciones</th>
   </tr>
-  <tr *ngFor="let item of order.itemList; let indx = index" (click)="goToForm(indx)">
-    <td>{{item.idAnimal}}</td>
-    <td>{{item.chapeta }}</td> 
-    <td>{{item.diagnostico}}</td>
-	<td>{{item.apta ? 'Si':'No'}}</td>
-	<td>{{item.sincronizada ? 'Si':'No'}}</td>
-	<td>{{item.encargado}}</td>
-	<td>{{item.observaciones}}</td>
+  <tr>
+    <td>2212233</td>
+    <td>G31-313</td> 
+    <td>OK</td>
+	<td>si</td>
+	<td>si</td>
+	<td>Juan Garzon</td>
+	<td>Ninguno</td>
   </tr>
-  <tr *ngIf="order.itemList.length === 0">
-    <td colspan="7"> No se encuentran datos !</td>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td> 
+    <td>94</td>
   </tr>
 </table>
+<ion-grid>
+	<ion-row>
+		<ion-col col-1>
+			<label>No</label>
+		</ion-col>
+		<ion-col col-3>
+			<label>ID. Animal</label>
+		</ion-col>
+		<ion-col col-3>
+			<label>Chapeta</label>
+		</ion-col>
+		<ion-col col-3>
+			<label>Diagnóstico</label>
+		</ion-col>
+		<ion-col col-2>
+			<label>Apta</label>
+		</ion-col>
+		<ion-col col-2>
+			<label>Sincronizada</label>
+		</ion-col>
+	</ion-row>
+	<ion-row>
+		<ion-col col-7>
+			<label>ID. Animal</label>
+		</ion-col>
+		<ion-col col-3>
+			<label>Chapeta</label>
+		</ion-col>
+		<ion-col col-2>
+			<label>Diagnóstico</label>
+		</ion-col>
+		<ion-col col-2>
+			<label>Apta</label>
+		</ion-col>
+		<ion-col col-2>
+			<label>Sincronizada</label>
+		</ion-col>
+	</ion-row>
+</ion-grid>
 </ion-card-content>
 </ion-card>
-
-<div class="spacer"></div>
-
-<ion-item class="terms-item">
-		<button ion-button full (click)="openSignatureModel()"> Open Signature </button>
-		<div style="border: solid 1px grey; min-height: 147px;"><img [src]="order.signatureImage" *ngIf="order.signatureImage" /></div>
-</ion-item>
-<ion-item class="terms-item">
-  <button ion-button full (click)="createPDF()"> createPDF </button>
-</ion-item>
-	
-</ion-content>

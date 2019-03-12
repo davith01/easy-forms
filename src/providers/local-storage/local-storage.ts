@@ -12,6 +12,8 @@ export class LocalStorageProvider {
 		});
 	}
 	
+	/* UserAuthentication Storage */
+	
 	getUserAuth() {
 		return this.storage.get('users-auth');
 	}
@@ -19,29 +21,29 @@ export class LocalStorageProvider {
 	setUserAuth(userAuth) {
 		
 		//retrive users authentication list
-		this.storage.get('users-auth').then((result) => {
-			if(result) {
+		this.storage.get('users-auth').then((usersAuth) => {
+			if(usersAuth) {
 				//return else user authentication
-				result = result.filter((dataAuth) => {
+				usersAuth = usersAuth.filter((dataAuth) => {
 					return userAuth.email !== dataAuth.email;
 				});
 			}
 			else { 
-				result = [];
+				usersAuth = [];
 			}
 			//add this user authentication
 			
-			result.push(userAuth);
-			this.storage.set('users-auth', result);
+			usersAuth.push(userAuth);
+			this.storage.set('users-auth', usersAuth);
 		});
 	} 
 
 	//return true if user auth data match in the user auth list
 	isUserAuth(userAuth,retrive) {
 		
-		this.storage.get('users-auth').then((result) => {
-			result = result || [];
-			let userAuthList = result.filter((dataAuth) => {
+		this.storage.get('users-auth').then((usersAuth) => {
+			usersAuth = usersAuth || [];
+			let userAuthList = usersAuth.filter((dataAuth) => {
 				return userAuth.email === dataAuth.email && userAuth.password === dataAuth.password;
 			});
 			
@@ -73,5 +75,36 @@ export class LocalStorageProvider {
 	removeFingerPrintAuth() {
 		this.storage.remove('finger-print-auth');
 	}
+	
+	
+	/* Ordes Storage */
+	
+	getOrders() {
+		return this.storage.get('orders');
+	}
+
+	setOrders(orders) {
+		this.storage.set('orders', orders);
+	} 
+	
+	/* Services Storage */
+	
+	getServices() {
+		return this.storage.get('services');
+	}
+
+	setServices(orders) {
+		this.storage.set('services', orders);
+	} 
+	
+	updateServices(dataOrder) {
+		this.getServices().then((orders) => {
+			let newList = [];
+			for(let order of orders){
+				newList.push(order.id === dataOrder.id ? dataOrder : order);
+			}
+			this.setServices(newList);
+		});	
+	} 
 	
 }

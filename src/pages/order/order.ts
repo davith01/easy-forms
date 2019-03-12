@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, Platform } from 'ionic-angular';
 import { DrawpadPage } from '../drawpad/drawpad';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 
 
 declare var cordova:any;    //global;
@@ -13,38 +14,41 @@ declare var cordova:any;    //global;
 export class OrderPage {
 
   order: any;
-  signatureImage: any;
+  parentPage: any;
   
   constructor(public navCtrl: NavController, public navParams: NavParams, 
+			  public localStorage: LocalStorageProvider,
 			  public modalCtrl: ModalController, public platform: Platform) {
-				  
+		
+	  this.parentPage = this.navParams.get("parentPage");
 	  this.order = this.navParams.get('order');
 	  this.order.itemList = this.order.itemList  || [];
-	  
+  }
+  
+  refresItemList(order){
+	  this.order.itemList = order.itemList || [];
+	  this.localStorage.updateServices(this.order);
+  }
+  
+  ionViewWillLeave() {
+      this.parentPage.ionViewWillEnter();
   }
   
   addNewForm() {
-    this.navCtrl.push('FormPage');
+    this.navCtrl.push('FormPage',{'order':this.order, 'parentPage': this, 'action':'new'});
   }
 
-  goToForm(item) {
-    this.navCtrl.push('FormPage',{'item':item});
+  goToForm(indx) {
+    this.navCtrl.push('FormPage',{'order':this.order, 'parentPage': this, 'action':'update', 'indx': indx});
   }
   
-  ionViewWillLoad() {
-	  this.order.itemList = this.navParams.get('itemList') || [];
-  }
-  
-  doChangeSignature(data) {
-    this.signatureImage = data;
-  }
-
   openSignatureModel() {
     let modal = this.modalCtrl.create(DrawpadPage);
     modal.present();
     modal.onDidDismiss((data: any) => {
       if (data) {
-        this.doChangeSignature(data.signatureImage);
+		this.order.signatureImage = data.signatureImage;
+		this.localStorage.updateServices(this.order);
       }
     });
   }
