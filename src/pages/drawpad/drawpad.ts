@@ -1,6 +1,6 @@
 import { Component,ViewChild } from '@angular/core';
-import { SignaturePadComponent } from '../../components/signature-pad/signature-pad';
-import { NavController, ViewController } from 'ionic-angular';
+import { NavController, ViewController, Platform } from 'ionic-angular';
+import { SignatureDrawPadComponent } from '../../components/signature-draw-pad/signature-draw-pad';
 
 @Component({
   selector: 'page-drawpad',
@@ -8,42 +8,45 @@ import { NavController, ViewController } from 'ionic-angular';
 })
 export class DrawpadPage {
 
-@ViewChild(SignaturePadComponent) public signaturePadComponent : SignaturePadComponent;
+@ViewChild(SignatureDrawPadComponent) public signatureDrawPad : SignatureDrawPadComponent;
 
   public signaturePadOptions : Object = {
-    'minWidth': 2,
-    'canvasWidth': 340,
-    'canvasHeight': 200
+    
   };
   public signatureImage : string;
   
-  constructor(public navCtrl: NavController, public viewCtrl : ViewController) { 
-	//HTMLCanvasElement
-	this.signaturePadComponent.initSignaturePad(this.signaturePadOptions);
+  constructor(public navCtrl: NavController, public viewCtrl : ViewController,
+			  public platform: Platform,) { 
+	
+	this.platform.ready().then((readySource) => {
+      
+    });
+	
   }
 
   closeModal(){
     this.navCtrl.pop();
   }
+  
+  initSignature() {
+	this.signatureDrawPad.initSignaturePad(this.signaturePadOptions);
+  }
 
   drawComplete() {
-    this.signatureImage = this.signaturePadComponent.toDataURL();
+    this.signatureImage = this.signatureDrawPad.toDataURL();
     let data  = {signatureImage: this.signatureImage};
 	this.viewCtrl.dismiss(data);
   }
 
   drawClear() {
-    this.signaturePadComponent.clear();
+    this.signatureDrawPad.clear();
   }
   
-  canvasResize() {
-    let canvas = document.querySelector('canvas');
-    this.signaturePadComponent.minWidth = 1;
-  }
-
   ngAfterViewInit() {
-	this.signaturePadComponent.clear();
-	this.canvasResize();
+	if(this.signatureDrawPad) {
+		this.signatureDrawPad.initSignaturePad(this.signaturePadOptions);
+		this.signatureDrawPad.clear();
+		this.signatureDrawPad.minWidth = 1;
+	}
   }
-
 }

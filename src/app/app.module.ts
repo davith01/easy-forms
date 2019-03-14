@@ -8,6 +8,7 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
 import { Network } from '@ionic-native/network/ngx';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 
 //---Modals and pages
 import { MyApp } from './app.component';
@@ -46,6 +47,7 @@ import { ComponentsModule } from '../components/components.module';
     StatusBar,
     SplashScreen,
 	Network,
+	DocumentViewer,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LocalStorageProvider,
     RestApiProvider,

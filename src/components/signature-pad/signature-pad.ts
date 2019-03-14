@@ -31,7 +31,7 @@ export interface IPointGroup {
 }
 
 @Component({
-  selector: 'signature-pad',
+  selector: 'signature-pad-component',
   templateUrl: 'signature-pad.html'
 })
 export class SignaturePadComponent {
