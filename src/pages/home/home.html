@@ -1,10 +1,22 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Pdf</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
+  <button ion-button (click)="getSupportInfo()">supportInfo</button>
+  <ion-item> {{supportInfo}}</ion-item>
+  <ion-item> {{pdfStatus}} </ion-item>
+  <button ion-button (click)="canViewDocument()">canViewDocument</button>
+  <button ion-button (click)="viewDocument()">viewDocument</button>
+  
+  <ion-item> {{optionsPdf}} </ion-item>
+  
+  
+  <button ion-button (click)="fromURL()">fromURL</button>
+  <button ion-button (click)="fromData()">fromData</button>
+  <button ion-button (click)="createPDF()">createPDF</button>
+  
 </ion-content>
  

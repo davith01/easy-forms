@@ -1,11 +1,11 @@
 import { Component,ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { LoadingController, ToastController } from 'ionic-angular';
-import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-import { RestApiProvider } from '../../providers/rest-api/rest-api';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
 import { LoginModalForm } from './login-modal-form';
 import { NetworkNotifyComponent } from '../../components/network-notify/network-notify';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
+import { RestApiProvider } from '../../providers/rest-api/rest-api';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 export interface LoginResponseInterface {
 	success: any;
@@ -25,14 +25,13 @@ export interface LoginRequestInterface {
 export class LoginPage {
 
 	showFingerPrint =  false;
-	networkMessage: any;
-
+	
 	@ViewChild(NetworkNotifyComponent) public networkNotifyComponent : NetworkNotifyComponent;
 	
 	constructor(public navCtrl: NavController, public navParams: NavParams,
 				public faio: FingerprintAIO, public modalCtrl: ModalController, 
 				public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
-				public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+				public utils: UtilsProvider) {
 
 		//initialize the FingerPrint control
 		this.faio.isAvailable().then(result => {
@@ -49,18 +48,16 @@ export class LoginPage {
 	
 	validateUserAuthentication(type: string, data: LoginRequestInterface) {
 
-		let loading = this.loadingCtrl.create({
-			content: 'Por favor espere...'
-		});
-
-		loading.present().then(() => { //start the loading component
+		//start the loading component
+		this.utils.openLoading().then(() => { 
 		
 			let userAuth = { 'email': data.email, 'password': data.password };
 		
 			this.restApi.getAuthSession(userAuth) 
 			.subscribe((result: LoginResponseInterface) => {
 				
-				loading.dismiss();  //stop the loading component
+				//stop the loading component
+				this.utils.dismissLoading();  
 				
 				//if session is ok, save to localstorage
 				if (result.success) { 
@@ -78,12 +75,13 @@ export class LoginPage {
 				}				
 				
 			}, error => {
-				loading.dismiss();  //stop the loading component
+				//stop the loading component
+				this.utils.dismissLoading();
 				 
 				//user or password error
 				if(error.status === 401) {
 					let messageErr = 'Usuario o contraseña no validos';
-					this.showToast(messageErr);
+					this.utils.showMessage(messageErr);
 				}
 				else {
 					
@@ -97,7 +95,7 @@ export class LoginPage {
 						}
 						else {
 							let messageErr = 'No puede iniciar sesión de usuario';
-							_self.showToast(messageErr);
+							_self.utils.showMessage(messageErr);
 						}	
 					});
 				}				
@@ -137,16 +135,8 @@ export class LoginPage {
 			this.loginFingerPrint();
 		})
 		.catch((error: any) => {
-			this.showToast(error);
+			this.utils.showMessage(error);
 		});
 	}
-
-	showToast(message: string) {
-		let toast = this.toastCtrl.create({
-			message: message,
-			duration: 2000,
-			position: 'top'
-		});
-		toast.present(toast);
-	}
+	
 }

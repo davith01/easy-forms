@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController, Platform } from '
 import { DrawpadPage } from '../drawpad/drawpad';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
+import { LoadingController, ToastController } from 'ionic-angular';
 
 declare var cordova:any;    //global;
 
@@ -46,6 +47,9 @@ export class OrderPage {
 		bookmarks : { enabled : true },
 		search : { enabled : true }
 	}
+	
+	this.error = 'pdf view init';
+    this.error2 = JSON.stringify(options);
 	  
 	if(this.platform.is('cordova')) {
 			
@@ -54,22 +58,30 @@ export class OrderPage {
 		let onMissingApp = function (appId, installer) {
 			installer();
 		}
+		
 		let onImpossible = function (){
 			this.error = 'document can\'t be shown';
 		}
+		
 		let onError = function (error){
-		  window.console.log(error);
 		  this.error = 'Sorry! Cannot show document.';
 		  this.error2 = JSON.stringify(error);
 		}
 		
 		let onPossible = function (){
 		  this.error = 'document can be shown';
-		  this.viewer.viewDocument('assets/perfumes.pdf', 'application/pdf', options);
+		  this.viewer.viewDocument(url, 'application/pdf', options);
 		}
-		
-		cordova.plugins.SitewaertsDocumentViewer.canViewDocument(
-			url, 'application/pdf', options, onPossible, onMissingApp, onImpossible, onError);
+			
+		try {
+			cordova.plugins.SitewaertsDocumentViewer.canViewDocument(
+				url, 'application/pdf', options, onPossible, onMissingApp, onImpossible, onError);  
+		}
+		catch(e) {
+		  this.error = 'Exception';
+		  this.error2 = typeof e === 'object'? JSON.stringify(e) : e;
+		}
+	
 	}
   }
   
@@ -102,22 +114,20 @@ export class OrderPage {
   }
   
   createPDF() {
-	  							
+
 	  var options = {
 		  documentSize: "A4",
 		  landscape: "portrait",
 		  type: "share",
-		  fileName: 'perfumes.pdf',
-		  baseUrl: 'assets/'
+		  fileName: 'assets/perfumes.pdf',
+		  baseUrl: ''
 	  }
 	 
 	  var pdfhtml = '<html><body>This is the pdf content</body></html>';
 	  
 	  if(this.platform.is('cordova')) {
 		  cordova.plugins.pdf.fromData(pdfhtml,options)
-		  .then((status) => {
-			  alert('pdf status '+status);
-		  })
+		  .then((base64) => 'ok')
 		  .catch((err) => {
 			alert('pdf error'+err);  
 		  });

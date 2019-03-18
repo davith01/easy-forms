@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-import { LoadingController, ToastController } from 'ionic-angular';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 @IonicPage()
 @Component({
@@ -15,11 +15,7 @@ export class FormPage {
   order: any;
   parentPage: any;
   ajustList: number = 0;
-  
   action: string;
-  
-  
-  //dataIndex: any;
   dataItem: any;
   itemIndex: any;
   backButton: boolean = false;
@@ -40,7 +36,7 @@ export class FormPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, 
 			  public localStorage: LocalStorageProvider,
 			  public formBuilder: FormBuilder, public modal: ModalController,
-			  public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+			  public utils: UtilsProvider) {
 	
 	  this.order = this.navParams.get('order');
 	  this.parentPage = this.navParams.get('parentPage');
@@ -69,7 +65,6 @@ export class FormPage {
 	this.action === 'new';
 	this.indx = this.order.itemList.length;
 	
-	
 	this.validations_form.reset({
 		idAnimal: '',
 		chapeta: '',
@@ -85,7 +80,7 @@ export class FormPage {
 	if(this.validations_form.valid) {
 		if(this.action === 'new') {
 			this.order.itemList.push(this.dataItem);
-			this.showToast('Registro agregado');
+			this.utils.showMessage('Registro agregado');
 			this.newItem();
 		}
 		if(this.action === 'update') {
@@ -94,7 +89,7 @@ export class FormPage {
 				list.push( item.idAnimal === this.dataItem.idAnimal ? this.dataItem :  item);
 			}
 			this.order.itemList = list;
-			this.showToast('Registro modificado');
+			this.utils.showMessage('Registro modificado');
 			
 			if(this.indx === this.order.itemList.length - 1 ){
 				this.newItem();
@@ -114,7 +109,7 @@ export class FormPage {
 		if(this.action === 'new') {
 			this.order.itemList.push(this.dataItem);
 			this.ajustList = 0;
-			this.showToast('Registro agregado');
+			this.utils.showMessage('Registro agregado');
 		}
 		if(this.action === 'update') {
 			let list = [];
@@ -123,7 +118,7 @@ export class FormPage {
 			}
 			this.order.itemList = list;
 			
-			this.showToast('Registro modificado');
+			this.utils.showMessage('Registro modificado');
 		}
 		
 		this.parentPage.refresItemList(this.order);
@@ -146,7 +141,7 @@ export class FormPage {
 		if(this.action === 'new') {
 			this.order.itemList.push(this.dataItem);
 			this.ajustList = 0;
-			this.showToast('Registro agregado');
+			this.utils.showMessage('Registro agregado');
 		}
 		if(this.action === 'update') {
 			let list = [];
@@ -154,19 +149,11 @@ export class FormPage {
 				list.push( item.idAnimal === this.dataItem.idAnimal ? this.dataItem :  item);
 			}
 			this.order.itemList = list;
-			this.showToast('Registro modificado');
+			this.utils.showMessage('Registro modificado');
 		}
 	}
 	
     this.parentPage.refresItemList(this.order);
   }
   
-  showToast(message: string) {
-		let toast = this.toastCtrl.create({
-			message: message,
-			duration: 2000,
-			position: 'top'
-		});
-		toast.present(toast);
-  }
 }

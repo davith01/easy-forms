@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Platform } from 'ionic-angular';
+import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
+declare var cordova:any;    //global;
 
 @IonicPage()
 @Component({
@@ -9,7 +11,47 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 export class HomePage { 
  
-  constructor(public navCtrl: NavController) {
-  }  
+  urlFile: string = 'assets/perfumes.pdf'; 
+  contentType: string = 'application/pdf';
+  optionsPdfViewer: DocumentViewerOptions = {
+		title: 'Reporte PDF',
+		documentView : {closeLabel : 'Cerrar'},
+		navigationView : {closeLabel : 'Cerrar'},
+		email : {enabled : true},
+		print : {enabled : true},
+		openWith : {enabled : true},
+		bookmarks : {enabled : true},
+		search : {enabled : true},
+		autoClose: {onPause : true}
+  }
+  optionsPdf: string;
   
+  constructor(public navCtrl: NavController, 
+			  public documentViewer: DocumentViewer,
+			  public platform: Platform ) {
+				  
+		this.optionsPdf = JSON.stringify(this.optionsPdfViewer);
+	
+  }  
+  createPDF() {
+	  							
+		  var options = {
+			  documentSize: "A4",
+			  landscape: "portrait",
+			  type: "share",
+			  fileName: 'assets/perfumes.pdf',
+			  baseUrl: ''
+		  }
+		 
+		  var pdfhtml = '<div style="background-color: #fafafa;" id="content-ajax" class="animated fadeInRight"> <div class="row wrapper border-bottom white-bg page-heading"> <div class="col-lg-10"> <h2>Evaluación Receptoras</h2> <ol class="breadcrumb"> <li> <a href="http://tester.estrategicacomunicaciones.com/invitro/home">Home</a> </li><li> <a href="http://tester.estrategicacomunicaciones.com/invitro/evaluation">Evaluación Receptoras</a> </li><li class="active"> <strong>Planilla de Evaluación de Receptoras</strong> </li></ol> </div></div><div class="wrapper wrapper-content animated fadeInRight"> <div class="row"> <div class="col-lg-12"> <div class="ibox float-e-margins"> <div class="ibox-title"> <h5>Orden de Producción</h5> <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> </div></div><div class="ibox-content"> <div class="row"> <div class="form-group col-lg-2"> <label>Orden de producción</label> <input type="text" class="form-control input-sm" value="26" id="txtOrder_id" name="txtOrder_id" readonly="" style="width:80px;height:30px"> </div><div class="form-group col-lg-4"> <label>Cliente</label> <input type="text" class="form-control input-sm" value="AGROPECUARIA BAMBUSA SAS" readonly=""> </div><div class="form-group col-lg-2"> <label>Local</label> <input type="text" class="form-control input-sm" value="Hacienda Santa Marta" readonly=""> </div><div class="form-group col-lg-2"> <label>Ciudad</label> <input type="text" class="form-control input-sm" value="Pereira" readonly=""> </div><div class="form-group col-lg-2"> <label>Fecha</label> <input type="text" class="form-control input-sm" value="2019-03-15" readonly=""> </div></div></div></div><div class="ibox float-e-margins"> <div class="ibox-title"> <h5>Planilla de Evaluación de Receptoras</h5> </div><div class="ibox-content"> <div class="row"> <div class="col-md-2"> <button id="btnAgregarM" type="button" class="btn btn-primary"> Agregar </button> </div></div><div class="row" align="right"> </div><br><form method="POST" action="http://tester.estrategicacomunicaciones.com/invitro/evaluation/26/save" role="form" id="form" novalidate="novalidate"> <input type="hidden" name="_token" value="4YjTTJIYkLEu2PtGWj3Shdb6Y4tgTpeHc1tfPUHJ"> <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content animated bounceInRight"> <div class="modal-headers" style="background-color:#18a689;"> <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true">×</span><span class="sr-only">Close</span> </button> <h1 class="modal-title"> <i id="iconModal" class="fa fa-search-plus"> </i> Planilla de Evaluación de Receptoras</h1> <input id="txtEvaluation_id" name="txtEvaluation_id" type="hidden" value="" class="form-control"> </div><div class="modal-body"> <div class="row"> <div class="form-group col-md-4 labelAppend"> <label>Id. Animal</label> <input id="txtAnimal_id" requiered="" name="txtAnimal_id" type="text" class="form-control"> </div><div class="form-group col-md-8"> <label>Chapeta</label> <input id="txtChapeta" name="txtChapeta" type="text" class="form-control"> </div><div class="form-group col-md-12"> <label>Diagnóstico</label> <input id="txtDiagnostic" name="txtDiagnostic" type="text" class="form-control"> </div><div class="form-group col-md-4"> <label>Apta</label> <select class="form-control input-sm" id="cmbFit" name="cmbFit"> <option value="1">Si</option> <option value="0">No</option> </select> </div><div class="form-group col-md-8"> <label>Sincronizada</label> <select class="form-control input-sm" id="cmbSynchronized" name="cmbSynchronized"> <option value="0">No</option> <option value="1">Si</option> </select> </div><div class="form-group col-md-4"> <label>Local</label> <select class="form-control input-sm" id="cmbLocal" name="cmbLocal"> <option value="7">Hacienda Santa Marta</option> <option value="8">Hacienda San José</option> <option value="9">Hacienda El Tomo</option> </select> </div><div class="form-group col-md-8"> <label>Nombre del Encargado</label> <input id="txtAttendant" name="txtAttendant" type="text" class="form-control"> </div><div class="form-group col-md-12"> <label>Otros Procedimientos</label> <input id="txtOther_procedures" name="txtOther_procedures" type="text" class="form-control"> </div><div class="form-group col-md-12"> <label>Observaciones</label> <input id="txtComments" name="txtComments" type="textArea" class="form-control"> </div></div></div><div class="modal-footer"> <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button> <button type="submit" class="btn btn-danger" id="btnEliminar" name="btnEliminar" value="0">Eliminar</button> <button type="submit" class="btn btn-primary" id="btnAgregar" name="btnAgregar">Agregar</button> </div></div></div></div><div class="table-responsive"> <div id="tblPlanilla_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-6"><div class="dataTables_length" id="tblPlanilla_length"><label>Mostrar <select name="tblPlanilla_length" aria-controls="tblPlanilla" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> Entradas</label></div></div><div class="col-sm-6"><div id="tblPlanilla_filter" class="dataTables_filter"><label>Buscar:<input type="search" class="form-control input-sm" placeholder="" aria-controls="tblPlanilla"></label></div></div></div><div class="row"><div class="col-sm-12"><table id="tblPlanilla" class="table table-striped table-bordered table-hover dataTables-example dataTable no-footer" role="grid" aria-describedby="tblPlanilla_info"> <thead> <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-sort="ascending" aria-label="No: activate to sort column descending" style="width: 19px;">No</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="ID. Animal: activate to sort column ascending" style="width: 46.3333px;">ID. Animal</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Chapeta: activate to sort column ascending" style="width: 54.3333px;">Chapeta</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Diagnóstico: activate to sort column ascending" style="width: 76.3333px;">Diagnóstico</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Apta: activate to sort column ascending" style="width: 31px;">Apta</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Sincronizada: activate to sort column ascending" style="width: 83.6667px;">Sincronizada</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Nombre del Encargado: activate to sort column ascending" style="width: 68.3333px;">Nombre del Encargado</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Local: activate to sort column ascending" style="width: 34.3333px;">Local</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Otros Procedimientos: activate to sort column ascending" style="width: 102.333px;">Otros Procedimientos</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label="Observaciones: activate to sort column ascending" style="width: 95.6667px;">Observaciones</th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 0.333336px;"></th><th class="sorting" tabindex="0" aria-controls="tblPlanilla" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 0px;"></th></tr></thead> <tbody> <tr class="odd"><td valign="top" colspan="12" class="dataTables_empty">No hay información</td></tr></tbody> <tfoot> </tfoot> </table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tblPlanilla_info" role="status" aria-live="polite">Mostrando 0 to 0 of 0 Entradas</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="tblPlanilla_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="tblPlanilla_previous"><a href="#" aria-controls="tblPlanilla" data-dt-idx="0" tabindex="0">Anterior</a></li><li class="paginate_button next disabled" id="tblPlanilla_next"><a href="#" aria-controls="tblPlanilla" data-dt-idx="1" tabindex="0">Siguiente</a></li></ul></div></div></div></div></div></form> </div></div><div class="ibox float-e-margins"> <div class="ibox-title"> <h5>Datos Generales</h5> </div><div class="ibox-content"> <form id="formEncabezado" method="post" action="http://tester.estrategicacomunicaciones.com/invitro/date_spreadsheet/26/2" role="form"> <input type="hidden" name="_token" value="4YjTTJIYkLEu2PtGWj3Shdb6Y4tgTpeHc1tfPUHJ"> <div class="row"> <div class="col-lg-4"> <div class="form-group"> <label>Recibido por</label> <input id="txtRecibido" name="txtRecibido" type="text" class="form-control input-sm" value=""> </div></div><div class="col-lg-3"> <div class="form-group"> <label>Cédula</label> <input id="txtCedula" name="txtCedula" type="text" class="form-control input-sm" value=""> </div></div><div class="col-lg-5"> <label>Fecha Evaluación</label> <div class="input-group date "> <span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input value="" type="text" name="date_event" id="date_event" class="form-control " placeholder="Fecha Evaluación"> </div></div></div><div class="row"> <div class="col-lg-5"> <div class="form-group"> <label>Observaciones</label> <textarea id="txtComment" name="txtComment" class="form-control input-sm"></textarea> </div></div><div class="ibox-content" align="right"> <button type="submit" class="btn btn-w-m btn-primary">Guardar</button> </div></div></form> </div></div></div></div></div></div>';
+		  
+		  if(this.platform.is('cordova')) {
+			  cordova.plugins.pdf.fromData(pdfhtml,options)
+			  .then((base64) => 'ok')
+			  .catch((err) => {
+				alert('pdf error'+err);  
+			  });
+		  }
+	  }
+
 }

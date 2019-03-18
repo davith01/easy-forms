@@ -22,6 +22,7 @@ import { RestApiProvider } from '../providers/rest-api/rest-api';
 
 //--- components
 import { ComponentsModule } from '../components/components.module';
+import { UtilsProvider } from '../providers/utils/utils';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { ComponentsModule } from '../components/components.module';
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LocalStorageProvider,
     RestApiProvider,
-    FingerprintAIO
+    FingerprintAIO,
+    UtilsProvider
     
   ]
 })

@@ -12,4 +12,4 @@ import { ComponentsModule } from '../../components/components.module';
 	ComponentsModule,
   ],
 })
-export class LoginPageModule { }
+export class LoginPageModule {}

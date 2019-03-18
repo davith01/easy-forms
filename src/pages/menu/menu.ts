@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, Nav } from 'ionic-angular';
-import { LoadingController, ToastController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 import { NetworkNotifyComponent } from '../../components/network-notify/network-notify';
 import { RestApiProvider } from '../../providers/rest-api/rest-api';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 export interface PageInterface {
   title: string;
@@ -33,22 +33,16 @@ export class MenuPage {
   ];
 
   constructor(public navCtrl: NavController, public platform: Platform,
-			  public localStorage: LocalStorageProvider, public restApi: RestApiProvider,
-			  public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+			  public localStorage: LocalStorageProvider, 
+			  public restApi: RestApiProvider,
+			  public utils: UtilsProvider) {
 		
 		//retrive finger print authentication data
 		this.localStorage.getFingerPrintAuth().then((result) => {
 			this.showFingerPrint = result ?  true : false;
 		});
 		
-		let loading = this.loadingCtrl.create({
-			content: 'Por favor espere...'
-		});
-		
-		loading.present().then(() => { //start the loading component
-			//invoke rest orders api 
-			this.loadOrders(loading);
-		});
+		this.loadOrders();
   }
 
   openPage(page: PageInterface) {
@@ -94,7 +88,7 @@ export class MenuPage {
   removeFingerPrint() {
     this.localStorage.removeFingerPrintAuth();
 	this.disableFingerPrint = true;
-    this.showToast('FingerPrint removed !!');
+    this.utils.showMessage('FingerPrint removed !!');
   }
 
   logOut() {
@@ -102,17 +96,7 @@ export class MenuPage {
     this.navCtrl.setRoot('LoginPage', params);
   }
 
-  showToast(message: string) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 2000,
-      position: 'top'
-    });
-
-    toast.present(toast);
-  }
-  
-  loadOrders(loading) {
+  loadOrders() {
 		let  typesForms = [{
 			"name": "Evaluación de receptoras",
 			"icon": "color-fill",
@@ -133,34 +117,40 @@ export class MenuPage {
 		
 		let listTypes = [typesForms[0],typesForms[0],typesForms[3],typesForms[2],typesForms[1],typesForms[1],typesForms[3]];
 		
-		//invoke rest orders api 
+		//start the loading component
+		this.utils.openLoading().then(() => {
 		
-		this.localStorage.getServices().then((orders) => {
-			if(!orders) {
-				this.restApi.getServices().then((result: any) => {
-					loading.dismiss(); //stop the loading component
-					console.log(result)
-					if(result && !result.error){
-						let i =0;
-						let orders = [];
-						for(let res of result){
-							res.type =  listTypes[i];
-							i++;
-							orders.push(res);
+			//invoke rest orders api 
+			this.localStorage.getServices().then((orders) => {
+				if(!orders) {
+					this.restApi.getServices().then((result: any) => {
+						
+						//stop the loading component
+						this.utils.dismissLoading(); 
+						
+						if(result && !result.error){
+							let i =0;
+							let orders = [];
+							for(let res of result){
+								res.type =  listTypes[i];
+								i++;
+								orders.push(res);
+							}
+							this.localStorage.setServices(orders);
 						}
-						this.localStorage.setServices(orders);
-					}
-				});
-			} else {
-				loading.dismiss(); //stop the loading component
-			}
+					});
+				} else {
+					//stop the loading component
+					this.utils.dismissLoading(); 
+				}
+			});
+			
+			this.restApi.getOrders().then((orders: any) => {
+				if(orders && !orders.error) {
+					this.localStorage.setOrders(orders);	
+				}
+			});
+			
 		});
-		
-		this.restApi.getOrders().then((orders: any) => {
-			if(orders && !orders.error) {
-				this.localStorage.setOrders(orders);	
-			}
-		});
-		
    }
 }
