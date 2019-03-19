@@ -13,7 +13,6 @@
 <button  ion-button (click)="openViewer()">
 </button>
 
-{{error}}-{{error2}}
 <ion-card-header class="ibox-title">
 	<ion-grid>
 	<ion-row>
@@ -109,7 +108,13 @@
 		<div style="border: solid 1px grey; min-height: 147px;"><img [src]="order.signatureImage" *ngIf="order.signatureImage" /></div>
 </ion-item>
 <ion-item class="terms-item">
-  <button ion-button full (click)="createPDF()"> createPDF </button>
+  <button ion-button full (click)="makePdf()"> createPDF </button>
 </ion-item>
+
+<ion-grid>
+  <ion-row *ngFor="let fl of files">
+  <ion-item>{{fl.dir}}{{fl.name}}{{fl.status}}</ion-item>
+  </ion-row>
+  </ion-grid>
 	
 </ion-content>

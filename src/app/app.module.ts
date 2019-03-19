@@ -9,6 +9,7 @@ import { Network } from '@ionic-native/network/ngx';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 //---Modals and pages
 import { MyApp } from './app.component';
@@ -45,6 +46,7 @@ import { UtilsProvider } from '../providers/utils/utils';
     DrawpadPage
   ],
   providers: [
+	File,
     StatusBar,
     SplashScreen,
 	Network,
@@ -54,7 +56,6 @@ import { UtilsProvider } from '../providers/utils/utils';
     RestApiProvider,
     FingerprintAIO,
     UtilsProvider
-    
   ]
 })
 export class AppModule { }
