@@ -77,7 +77,7 @@ export class OrderPage {
 
 	makePdf() {
 
-		let _this = this;
+		let _self = this;
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 		//start the loading component
@@ -119,20 +119,20 @@ export class OrderPage {
 						try {
 							let utf8 = new Uint8Array(buffer);
 							let binaryArray = utf8.buffer;
-							_this.utils.showMessage('Archivo creado exitosamente');
-							_this.saveToDevice(binaryArray, "Invitro.pdf");
+							_self.utils.showMessage('Archivo creado exitosamente');
+							_self.saveToDevice(binaryArray, "Invitro.pdf");
 						} catch (e) {
-							_this.utils.showMessage('error' + e);
+							_self.utils.showMessage('error' + e);
 						}
-					});
+					}); 
 				
 				} catch (err) {
-					_this.utils.showMessage('error' + err);
-				}
+					_self.utils.showMessage('error' + err);
+				} 
 			}
 			else {
 				//stop the loading component
-				_this.utils.dismissLoading();
+				_self.utils.dismissLoading();
 				pdfmake.createPdf(docDefinition).open();
 			}
 		});
