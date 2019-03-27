@@ -118,17 +118,16 @@ export class OrderPage {
 						try {
 							let utf8 = new Uint8Array(buffer);
 							let binaryArray = utf8.buffer;
-							//_self.saveToDevice(binaryArray, "Invitro.pdf");
-							_self.saveAndOpenPdf(binaryArray, "Invitro.pdf");
-
+							_self.utils.showMessage('Archivo creado exitosamente');
+							_self.saveToDevice(binaryArray, "Invitro.pdf");
 						} catch (e) {
 							_self.utils.showMessage('error' + e);
 						}
-					});
-
+					}); 
+				
 				} catch (err) {
 					_self.utils.showMessage('error' + err);
-				}
+				} 
 			}
 			else {
 				//stop the loading component
