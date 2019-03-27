@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, Platform } from 'ionic-angular';
-import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
+import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer';
 
 declare var cordova:any;    //global;
 

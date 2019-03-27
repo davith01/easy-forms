@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, Platform } from 'ionic-angular';
 import { DrawpadPage } from '../drawpad/drawpad';
 import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
-import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { DocumentViewer } from '@ionic-native/document-viewer';
+import { File } from '@ionic-native/file';
 import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { UtilsProvider } from '../../providers/utils/utils';
@@ -77,7 +77,7 @@ export class OrderPage {
 
 	makePdf() {
 
-		let _this = this;
+		let _self = this;
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 		//start the loading component
@@ -113,26 +113,26 @@ export class OrderPage {
 				try {
 					//stop the loading component
 					this.utils.dismissLoading();
-					this.utils.showMessage('Creando archivo en ' + this.file.externalDataDirectory);
-					
+					this.utils.showMessage('Iniciando carga de archivo');
 					pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 						try {
 							let utf8 = new Uint8Array(buffer);
 							let binaryArray = utf8.buffer;
-							_this.utils.showMessage('Archivo creado exitosamente');
-							_this.saveToDevice(binaryArray, "Invitro.pdf");
+							//_self.saveToDevice(binaryArray, "Invitro.pdf");
+							_self.saveAndOpenPdf(binaryArray, "Invitro.pdf");
+
 						} catch (e) {
-							_this.utils.showMessage('error' + e);
+							_self.utils.showMessage('error' + e);
 						}
 					});
-				
+
 				} catch (err) {
-					_this.utils.showMessage('error' + err);
+					_self.utils.showMessage('error' + err);
 				}
 			}
 			else {
 				//stop the loading component
-				_this.utils.dismissLoading();
+				_self.utils.dismissLoading();
 				pdfmake.createPdf(docDefinition).open();
 			}
 		});
@@ -141,6 +141,31 @@ export class OrderPage {
 	saveToDevice(data: any, savefile: any) {
 		this.file.writeFile(this.file.externalDataDirectory, savefile, data, { replace: false });
 		this.utils.showMessage('File saved to your device');
+	}
+
+	saveAndOpenPdf(pdfBlob: any, filename: string) {
+		let options = {
+			title: 'Invitro - Plantilla',
+			documentView: { closeLabel: 'Cerrar' },
+			navigationView: { closeLabel: 'Close' },
+			email: { enabled: true },
+			print: { enabled: true },
+			openWith: { enabled: true },
+			bookmarks: { enabled: true },
+			search: { enabled: true }
+		}
+		const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.externalDataDirectory;
+		this.file.writeFile(writeDirectory, filename, pdfBlob, { replace: true })
+			.then(() => {
+				this.viewer.viewDocument(writeDirectory + filename, "application/pdf", options);
+				/*this.opener.open(writeDirectory + filename, 'application/pdf')
+					.catch(() => {
+						_self.utils.showMessage('Error opening pdf file');
+					});*/
+			})
+			.catch(() => {
+				this.utils.showMessage('Error writing pdf file');
+			});
 	}
 
 }

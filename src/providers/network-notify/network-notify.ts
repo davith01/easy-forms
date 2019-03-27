@@ -1,9 +1,8 @@
 import { Http, Headers } from '@angular/http';
-import 'rxjs/add/operator/timeout'; // otherwise http client for timeout
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
-import { Network } from '@ionic-native/network/ngx';
+import { Network } from '@ionic-native/network';
 import { RestApiProvider } from '../../providers/rest-api/rest-api';
 
 export enum ConnectionStatusEnum {

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
-import { Network } from '@ionic-native/network/ngx';
-
+import { Network } from '@ionic-native/network';
 
 @Component({
   selector: 'network-notify-component',

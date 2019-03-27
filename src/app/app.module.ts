@@ -5,11 +5,13 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio';
-import { Network } from '@ionic-native/network/ngx';
+import { Network } from '@ionic-native/network';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { DocumentViewer } from '@ionic-native/document-viewer';
+import { File } from '@ionic-native/file';
+import { ApolloModule } from 'apollo-angular';
+export { ApolloClientManager } from './apollo-client-manager';
 
 //---Modals and pages
 import { MyApp } from './app.component';
@@ -24,6 +26,7 @@ import { RestApiProvider } from '../providers/rest-api/rest-api';
 //--- components
 import { ComponentsModule } from '../components/components.module';
 import { UtilsProvider } from '../providers/utils/utils';
+import { GraphQlProvider } from '../providers/graph-ql/graph-ql';
 
 @NgModule({
   declarations: [
@@ -34,10 +37,11 @@ import { UtilsProvider } from '../providers/utils/utils';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    ApolloModule,
     IonicStorageModule.forRoot(),
     HttpClientModule,
-	HistoryPageModule,
-	ComponentsModule
+    HistoryPageModule,
+    ComponentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -46,16 +50,17 @@ import { UtilsProvider } from '../providers/utils/utils';
     DrawpadPage
   ],
   providers: [
-	File,
+    File,
     StatusBar,
     SplashScreen,
-	Network,
-	DocumentViewer,
+    Network,
+    DocumentViewer,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LocalStorageProvider,
     RestApiProvider,
     FingerprintAIO,
-    UtilsProvider
+    UtilsProvider,
+    GraphQlProvider
   ]
 })
 export class AppModule { }

@@ -137,7 +137,7 @@ export class SignatureDrawPadComponent {
 			callback();
 		  }
 		};
-		image.onerror = (error) => {
+		image.onerror = (error:ErrorEvent) => {
 		  if (callback) {
 			callback(error);
 		  }
